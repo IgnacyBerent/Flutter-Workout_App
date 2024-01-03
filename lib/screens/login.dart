@@ -59,7 +59,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 18),
               TextFormField(
-                maxLength: 30,
                 decoration: InputDecoration(
                   label: Row(
                     children: [
@@ -90,7 +89,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 12),
               TextFormField(
-                maxLength: 30,
                 decoration: InputDecoration(
                   label: Row(
                     children: [

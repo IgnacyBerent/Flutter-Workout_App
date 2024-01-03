@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -13,6 +14,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   var _enteredEmail = '';
   var _enteredPassword = '';
+  var _enteredWeight = '';
+  var _enteredHeight = '';
 
   void _signUp() {
     FocusScope.of(context).unfocus(); // close keyboard
@@ -58,7 +61,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                maxLength: 30,
                 decoration: InputDecoration(
                   label: Row(
                     children: [
@@ -97,7 +99,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                maxLength: 30,
                 controller: _passwordController,
                 decoration: InputDecoration(
                   label: Row(
@@ -144,7 +145,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                maxLength: 30,
                 decoration: InputDecoration(
                   label: Row(
                     children: [
@@ -174,6 +174,91 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   }
                   return null;
                 },
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        label: Row(
+                          children: [
+                            ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                  Theme.of(context).iconTheme.color!,
+                                  BlendMode.srcIn),
+                              child: Image.asset('assets/weight.png'),
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              'WEIGHT (KG)',
+                              style: TextStyle(
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(fontSize: 12)
+                                    .fontSize,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            double.tryParse(value) == null) {
+                          return 'Please enter your weight';
+                        }
+                        if (200 <= double.parse(value) ||
+                            double.parse(value) <= 20) {
+                          return 'Please enter a valid weight';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _enteredWeight = value!,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        label: Row(
+                          children: [
+                            const Icon(Icons.person),
+                            const SizedBox(width: 5),
+                            Text(
+                              'HEIGHT (CM)',
+                              style: TextStyle(
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(fontSize: 12)
+                                    .fontSize,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            double.tryParse(value) == null) {
+                          return 'Please enter your height';
+                        }
+                        if (200 <= double.parse(value) ||
+                            double.parse(value) <= 20) {
+                          return 'Please enter a valid height';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _enteredHeight = value!,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 18),
               Align(
