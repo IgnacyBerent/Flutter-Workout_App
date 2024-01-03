@@ -17,7 +17,7 @@ class _TabsScreenState extends State<TabsScreen> {
   Widget build(BuildContext context) {
     // TODO: implement choosing pages
     Widget activePage = HomeScreen();
-    String activePageTitle = 'Login';
+    String activePageTitle = 'Home';
 
     return Scaffold(
       appBar: AppBar(
