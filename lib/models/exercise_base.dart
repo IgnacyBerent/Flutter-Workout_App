@@ -1,15 +1,33 @@
-class Exercise {
-  Exercise({
+abstract class ExerciseBase {
+  ExerciseBase({
     required this.name,
     required this.weight,
     required this.reps,
     required this.bonusReps,
   });
 
-  final ExerciseName name;
+  final dynamic name;
   final int weight;
   final int reps;
   final int bonusReps;
+}
+
+class CustomExercise extends ExerciseBase {
+  CustomExercise({
+    required String name,
+    required int weight,
+    required int reps,
+    required int bonusReps,
+  }) : super(name: name, weight: weight, reps: reps, bonusReps: bonusReps);
+}
+
+class Exercise extends ExerciseBase {
+  Exercise({
+    required ExerciseName name,
+    required int weight,
+    required int reps,
+    required int bonusReps,
+  }) : super(name: name, weight: weight, reps: reps, bonusReps: bonusReps);
 }
 
 enum ExerciseName {

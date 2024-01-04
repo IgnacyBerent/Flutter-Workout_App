@@ -1,4 +1,4 @@
-import 'package:workout_app/models/exercise.dart';
+import 'package:workout_app/models/exercise_base.dart';
 
 enum Split {
   I,
@@ -19,5 +19,5 @@ class Training {
 
   final String date;
   final Split split;
-  final List<Exercise> exercises;
+  final List<ExerciseBase> exercises;
 }
