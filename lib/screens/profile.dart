@@ -7,10 +7,6 @@ class ProfileScreen extends StatelessWidget {
 
   final User? user = Auth().currentUser;
 
-  void _signOut() async {
-    await Auth().signOut();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Center(
