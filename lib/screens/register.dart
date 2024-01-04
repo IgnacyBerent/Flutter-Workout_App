@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:workout_app/firestore/auth.dart';
+import 'package:workout_app/firestore/firestore.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -9,6 +11,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FireStoreClass _db = FireStoreClass();
   final _formKey = GlobalKey<FormState>();
   var _isLoading = false;
   final _passwordController = TextEditingController();
@@ -16,8 +20,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var _enteredPassword = '';
   var _enteredWeight = '';
   var _enteredHeight = '';
+  String? errorMessage = '';
 
-  void _signUp() {
+  Future<void> _signUp() async {
     FocusScope.of(context).unfocus(); // close keyboard
 
     if (_formKey.currentState!.validate()) {
@@ -25,17 +30,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         _isLoading = true;
       });
-      print(_enteredEmail);
-      print(_enteredPassword);
-      // use those values to send our auth request ...
+
+      try {
+        await Auth().createUserWithEmailAndPassword(
+            email: _enteredEmail, password: _enteredPassword);
+
+        final User? user = _auth.currentUser;
+        if (user != null) {
+          await _db.createNewUser(
+            uid: user.uid,
+            weight: _enteredWeight,
+            height: _enteredHeight,
+          );
+        }
+        if (!context.mounted) {
+          return;
+        }
+        Navigator.pop(context);
+      } on FirebaseAuthException catch (e) {
+        setState(() {
+          _isLoading = false;
+          errorMessage = e.message;
+        });
+
+        if (!context.mounted) {
+          return;
+        }
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Login Failed'),
+            content: Text(errorMessage!),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Okay'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
-  String? _confirmPasswordValidator(String? value) {
-    if (value != _passwordController.text) {
-      return 'Passwords do not match';
-    }
-    return null;
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override

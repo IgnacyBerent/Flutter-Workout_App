@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/screens/register.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,8 +15,9 @@ class _LoginScreenState extends State<LoginScreen> {
   var _enteredEmail = '';
   var _enteredPassword = '';
   var _isLoading = false;
+  String? errorMessage = '';
 
-  void _trySubmit() {
+  Future<void> _signIn() async {
     FocusScope.of(context).unfocus(); // close keyboard
 
     if (_formKey.currentState!.validate()) {
@@ -22,9 +25,36 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _isLoading = true;
       });
-      print(_enteredEmail);
-      print(_enteredPassword);
-      // use those values to send our auth request ...
+      try {
+        await Auth().signWithEmailAndPassword(
+            email: _enteredEmail, password: _enteredPassword);
+      } on FirebaseAuthException catch (e) {
+        setState(() {
+          _isLoading = false;
+          errorMessage = e.message;
+        });
+
+        // Show dialog if login fails
+
+        if (!context.mounted) {
+          return;
+        }
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Login Failed'),
+            content: Text(errorMessage!),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Okay'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
@@ -127,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 12),
                     ),
-                    onPressed: _trySubmit,
+                    onPressed: _signIn,
                     child: _isLoading
                         ? const CircularProgressIndicator()
                         : const Row(
