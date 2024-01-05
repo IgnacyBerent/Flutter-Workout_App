@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           surface: const Color.fromARGB(255, 24, 8, 29),
         ),
         scaffoldBackgroundColor: const Color.fromARGB(255, 9, 8, 10),
-        cardTheme: CardTheme().copyWith(
+        cardTheme: const CardTheme().copyWith(
             color: Theme.of(context).colorScheme.onSecondaryContainer),
       ),
       home: const WidgetTree(),
