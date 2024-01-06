@@ -15,8 +15,29 @@ class _NewExerciseState extends State<NewExercise> {
   final _options =
       ExerciseName.values.map((exercise) => exercise.name).toList();
   final _exerciseNameController = TextEditingController();
+  bool _isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
+
+  var _selectedExerciseName = '';
+  var _selectedWeight = 0.0;
+  var _selectedReps = 0;
+  var _selectedBonusReps = 0;
+
+  void _addExercise() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() {
+        _isLoading = true;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _exerciseNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +47,11 @@ class _NewExerciseState extends State<NewExercise> {
         title: const Text('New Exercise'),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
-              // TODO: Update value after selecting
               TypeAheadField(
                 suggestionsCallback: ((search) => _options
                     .where((option) =>
@@ -50,6 +71,13 @@ class _NewExerciseState extends State<NewExercise> {
                         ),
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter exercise name';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) => _selectedExerciseName = value!,
                   );
                 },
                 itemBuilder: (context, value) => ListTile(
@@ -70,6 +98,17 @@ class _NewExerciseState extends State<NewExercise> {
                     ),
                   ),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter weight';
+                  }
+                  if (double.tryParse(value) == null ||
+                      double.parse(value) <= 0) {
+                    return 'Please enter valid weight';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _selectedWeight = double.parse(value!),
               ),
               const SizedBox(height: 15),
               TextFormField(
@@ -82,10 +121,21 @@ class _NewExerciseState extends State<NewExercise> {
                     ),
                   ),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter reps number';
+                  }
+                  if (int.tryParse(value) == null || int.parse(value) <= 0) {
+                    return 'Please enter valid reps number';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _selectedReps = int.parse(value!),
               ),
               const SizedBox(height: 15),
               TextFormField(
                 keyboardType: TextInputType.number,
+                initialValue: '0',
                 decoration: const InputDecoration(
                   labelText: 'Bonus Reps',
                   border: OutlineInputBorder(
@@ -94,6 +144,16 @@ class _NewExerciseState extends State<NewExercise> {
                     ),
                   ),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter reps number';
+                  }
+                  if (int.tryParse(value) == null || int.parse(value) < 0) {
+                    return 'Please enter valid reps number';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _selectedBonusReps = int.parse(value!),
               ),
               const SizedBox(height: 25),
               SizedBox(
@@ -170,16 +230,27 @@ class _NewExerciseState extends State<NewExercise> {
                 width: 120,
                 height: 60,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _isLoading ? null : _addExercise,
                   style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.tertiaryContainer),
-                  child: Text(
-                    'Add',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Colors.white,
-                        ),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.tertiaryContainer,
                   ),
+                  child: _isLoading
+                      ? CircularProgressIndicator(
+                          // Show loading animation when _isLoading is true
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).colorScheme.onTertiaryContainer,
+                          ),
+                        )
+                      : Text(
+                          'Add',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onTertiaryContainer,
+                                  ),
+                        ),
                 ),
               ),
             ],
