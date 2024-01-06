@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/models/exercise_base.dart';
+import 'package:workout_app/widgets/exercise_card.dart';
 
 class ExerciseCardInner extends StatelessWidget {
-  const ExerciseCardInner({super.key});
+  const ExerciseCardInner(this.exercise, {super.key});
+
+  final Exercise exercise;
 
   @override
   Widget build(BuildContext context) {
@@ -10,45 +14,10 @@ class ExerciseCardInner extends StatelessWidget {
       child: SizedBox(
         height: 140,
         child: InkWell(
-          onTap: () {},
-          borderRadius: BorderRadius.circular(16),
-          splashColor: Theme.of(context).colorScheme.onSecondary,
-          child: Card(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Exercise',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  'Weight: 100 kg',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 14,
-                  ),
-                ),
-                Text(
-                  'Reps: 8',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 14,
-                  ),
-                ),
-                Text(
-                  'Bonus Reps: 0',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+            onTap: () {},
+            borderRadius: BorderRadius.circular(16),
+            splashColor: Theme.of(context).colorScheme.onSecondary,
+            child: ExerciseCard(exercise)),
       ),
     );
   }

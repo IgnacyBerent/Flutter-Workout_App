@@ -25,7 +25,7 @@ class _ExercisesScreenState extends ConsumerState<ExercisesScreen> {
       content = ListView.builder(
         itemCount: _addedExercises.length,
         itemBuilder: (context, index) {
-          return const ExerciseCardInner();
+          return ExerciseCardInner(_addedExercises[index]);
         },
       );
     }

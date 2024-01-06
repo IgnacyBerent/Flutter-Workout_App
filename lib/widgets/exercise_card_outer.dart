@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/models/exercise_base.dart';
+import 'package:workout_app/widgets/exercise_card.dart';
 
 class ExerciseCardOuter extends StatelessWidget {
-  const ExerciseCardOuter({super.key});
+  const ExerciseCardOuter(this.exercise, {super.key});
+
+  final Exercise exercise;
 
   @override
   Widget build(BuildContext context) {
@@ -9,41 +13,7 @@ class ExerciseCardOuter extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
         height: 140,
-        child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Exercise',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontSize: 16,
-                ),
-              ),
-              Text(
-                'Weight: 100 kg',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                'Reps: 8',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                'Bonus Reps: 0',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.secondary,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ),
+        child: ExerciseCard(exercise),
       ),
     );
   }
