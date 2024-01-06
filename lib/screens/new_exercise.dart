@@ -47,7 +47,7 @@ class _NewExerciseState extends State<NewExercise> {
         title: const Text('New Exercise'),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
         child: Form(
           key: _formKey,
           child: Column(
@@ -157,7 +157,7 @@ class _NewExerciseState extends State<NewExercise> {
               ),
               const SizedBox(height: 25),
               SizedBox(
-                height: 80,
+                height: 70,
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {},
@@ -228,7 +228,7 @@ class _NewExerciseState extends State<NewExercise> {
               const Spacer(),
               SizedBox(
                 width: 120,
-                height: 60,
+                height: 43,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _addExercise,
                   style: ElevatedButton.styleFrom(
