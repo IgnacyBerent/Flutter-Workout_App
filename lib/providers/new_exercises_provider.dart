@@ -4,15 +4,15 @@ import 'package:workout_app/models/exercise_base.dart';
 class ExerciseNotifier extends StateNotifier<List<Exercise>> {
   ExerciseNotifier() : super([]);
 
-  void addExercise(Exercise exercise) {
+  void add(Exercise exercise) {
     state = [...state, exercise];
   }
 
-  void removeExercise(Exercise exercise) {
+  void remove(Exercise exercise) {
     state = state.where((e) => e != exercise).toList();
   }
 
-  void updateExercise(Exercise exercise) {
+  void update(Exercise exercise) {
     state = [
       for (final e in state)
         if (e == exercise) exercise else e

@@ -24,7 +24,13 @@ class _ExercisesScreenState extends ConsumerState<ExercisesScreen> {
       content = ListView.builder(
         itemCount: _addedExercises.length,
         itemBuilder: (context, index) {
-          return ExerciseCardInner(_addedExercises[index]);
+          return Dismissible(
+            key: ValueKey(_addedExercises[index].name),
+            onDismissed: (direction) => ref
+                .read(exerciseProvider.notifier)
+                .remove(_addedExercises[index]),
+            child: ExerciseCardInner(_addedExercises[index]),
+          );
         },
       );
     }

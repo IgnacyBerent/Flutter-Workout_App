@@ -40,7 +40,7 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
         bonusReps: _selectedBonusReps,
       );
 
-      ref.read(exerciseProvider.notifier).addExercise(newExercise);
+      ref.read(exerciseProvider.notifier).add(newExercise);
       Navigator.of(context).pop();
     }
   }
