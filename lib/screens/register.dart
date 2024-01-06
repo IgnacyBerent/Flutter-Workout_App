@@ -313,7 +313,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 12),
                     ),
-                    onPressed: _signUp,
+                    onPressed: _isLoading ? null : _signUp,
                     child: _isLoading
                         ? const CircularProgressIndicator()
                         : const Row(
