@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workout_app/models/exercise_base.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/screens/new_exercise.dart';
 import 'package:workout_app/widgets/exercise_card_inner.dart';
