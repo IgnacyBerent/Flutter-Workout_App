@@ -1,21 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/models/exercise_base.dart';
 import 'package:workout_app/models/training.dart';
 import 'package:intl/intl.dart';
 import 'package:workout_app/screens/exercises.dart';
 import 'package:workout_app/widgets/exercise_card_outer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workout_app/providers/new_exercises_provider.dart';
 
-class NewTrainingScreen extends StatefulWidget {
+class NewTrainingScreen extends ConsumerStatefulWidget {
   const NewTrainingScreen({super.key});
 
   @override
-  State<NewTrainingScreen> createState() => _NewTrainingScreenState();
+  ConsumerState<NewTrainingScreen> createState() => _NewTrainingScreenState();
 }
 
-class _NewTrainingScreenState extends State<NewTrainingScreen> {
+class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
   var _selectedSplit = Split.I;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final _addedExercises = ref.watch(exerciseProvider);
+
+    Widget content = const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('No exercises added yet!'),
+          SizedBox(height: 20),
+          Text('Tap here to add exercises'),
+        ],
+      ),
+    );
+
+    if (_addedExercises.isNotEmpty) {
+      content = ListView.builder(
+        itemCount: _addedExercises.length,
+        itemBuilder: (context, index) {
+          return const ExerciseCardOuter();
+        },
+      );
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('New Training'),
@@ -23,6 +49,7 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
           child: Form(
+            key: _formKey,
             child: Column(
               children: [
                 Row(
@@ -89,12 +116,7 @@ class _NewTrainingScreenState extends State<NewTrainingScreen> {
                     },
                     borderRadius: BorderRadius.circular(16),
                     splashColor: Theme.of(context).colorScheme.onSecondary,
-                    child: ListView.builder(
-                      itemCount: 6,
-                      itemBuilder: (context, index) {
-                        return const ExerciseCardOuter();
-                      },
-                    ),
+                    child: content,
                   ),
                 ),
                 const SizedBox(height: 20),

@@ -1,7 +1,7 @@
 class User {
   final String id;
-  final String weight;
-  final String height;
+  final double weight;
+  final double height;
 
   User({
     required this.id,

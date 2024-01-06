@@ -1,17 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workout_app/models/exercise_base.dart';
+import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/screens/new_exercise.dart';
 import 'package:workout_app/widgets/exercise_card_inner.dart';
 
-class ExercisesScreen extends StatefulWidget {
+class ExercisesScreen extends ConsumerStatefulWidget {
   const ExercisesScreen({super.key});
 
   @override
-  State<ExercisesScreen> createState() => _ExercisesScreenState();
+  ConsumerState<ExercisesScreen> createState() => _ExercisesScreenState();
 }
 
-class _ExercisesScreenState extends State<ExercisesScreen> {
+class _ExercisesScreenState extends ConsumerState<ExercisesScreen> {
   @override
   Widget build(BuildContext context) {
+    final _addedExercises = ref.watch(exerciseProvider);
+
+    Widget content = const Center(
+      child: Text('No exercises added yet!'),
+    );
+
+    if (_addedExercises.isNotEmpty) {
+      content = ListView.builder(
+        itemCount: _addedExercises.length,
+        itemBuilder: (context, index) {
+          return const ExerciseCardInner();
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Exercises'),
@@ -29,14 +47,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-        child: ListView.builder(
-          itemCount: 6,
-          itemBuilder: (context, index) {
-            return const ExerciseCardInner();
-          },
-        ),
-      ),
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          child: content),
     );
   }
 }

@@ -19,5 +19,5 @@ class Training {
 
   final String date;
   final Split split;
-  final List<ExerciseBase> exercises;
+  final List<Exercise> exercises;
 }

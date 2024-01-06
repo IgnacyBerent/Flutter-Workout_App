@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_app/models/exercise_base.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:workout_app/providers/new_exercises_provider.dart';
 
-class NewExercise extends StatefulWidget {
+class NewExercise extends ConsumerStatefulWidget {
   const NewExercise({
     super.key,
   });
 
   @override
-  State<NewExercise> createState() => _NewExerciseState();
+  ConsumerState<NewExercise> createState() => _NewExerciseState();
 }
 
-class _NewExerciseState extends State<NewExercise> {
+class _NewExerciseState extends ConsumerState<NewExercise> {
   final _options =
       ExerciseName.values.map((exercise) => exercise.name).toList();
   final _exerciseNameController = TextEditingController();
@@ -30,6 +32,16 @@ class _NewExerciseState extends State<NewExercise> {
       setState(() {
         _isLoading = true;
       });
+
+      final newExercise = Exercise(
+        name: _selectedExerciseName,
+        weight: _selectedWeight,
+        reps: _selectedReps,
+        bonusReps: _selectedBonusReps,
+      );
+
+      ref.read(exerciseProvider.notifier).addExercise(newExercise);
+      Navigator.of(context).pop();
     }
   }
 
