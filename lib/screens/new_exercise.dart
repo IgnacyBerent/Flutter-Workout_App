@@ -14,6 +14,7 @@ class NewExercise extends StatefulWidget {
 class _NewExerciseState extends State<NewExercise> {
   final _options =
       ExerciseName.values.map((exercise) => exercise.name).toList();
+  final _exerciseNameController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -35,6 +36,7 @@ class _NewExerciseState extends State<NewExercise> {
                     .where((option) =>
                         option.toLowerCase().contains(search.toLowerCase()))
                     .toList()),
+                controller: _exerciseNameController,
                 builder: (context, controller, focusNode) {
                   return TextFormField(
                     controller: controller,
@@ -54,14 +56,14 @@ class _NewExerciseState extends State<NewExercise> {
                   title: Text(value.toString()),
                 ),
                 onSelected: (value) {
-                  print(value);
+                  _exerciseNameController.text = value.toString();
                 },
               ),
               const SizedBox(height: 15),
               TextFormField(
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'Weight',
+                  labelText: 'Weight (kg)',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(
                       Radius.circular(10.0),
