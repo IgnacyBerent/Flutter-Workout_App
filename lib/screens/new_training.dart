@@ -18,7 +18,6 @@ class NewTrainingScreen extends ConsumerStatefulWidget {
 }
 
 class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FireStoreClass _db = FireStoreClass();
   var _selectedSplit = 'I';
   final _formKey = GlobalKey<FormState>();
@@ -69,7 +68,7 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
         date: _selectedDate,
         split: _selectedSplit,
         exercises: ref.read(exerciseProvider),
-      ).toJson(),
+      ),
     );
     if (!context.mounted) {
       return;

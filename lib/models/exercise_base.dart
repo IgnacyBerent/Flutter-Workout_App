@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 class Exercise {
   final String name;
   final double weight;
@@ -30,11 +27,6 @@ class Exercise {
       bonusReps: map['bonusReps'] as int,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory Exercise.fromJson(String source) =>
-      Exercise.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 enum ExerciseName {

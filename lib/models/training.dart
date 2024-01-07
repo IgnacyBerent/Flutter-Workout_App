@@ -1,6 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:workout_app/models/exercise_base.dart';
 
 enum Split {
@@ -44,8 +42,15 @@ class Training {
     );
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory Training.fromJson(String source) =>
-      Training.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Training.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
+    return Training(
+      date: doc['date'] as String,
+      split: doc['split'] as String,
+      exercises: List<Exercise>.from(
+        (doc['exercises'] as List<int>).map<Exercise>(
+          (x) => Exercise.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+    );
+  }
 }

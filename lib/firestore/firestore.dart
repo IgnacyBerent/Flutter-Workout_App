@@ -18,11 +18,13 @@ class FireStoreClass {
 
   Future<void> addTraining({
     required String uid,
-    required String training,
+    required Training training,
   }) async {
+    Map<String, dynamic> newTraining = training.toMap();
+
     await _myFireStore.collection('users').doc(uid).update({
       'trainings': FieldValue.arrayUnion(
-          [training]), // Dodawanie nowego treningu do listy
+          [newTraining]), // Dodawanie nowego treningu do listy
     });
   }
 }
