@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:workout_app/models/training.dart';
 
 class FireStoreClass {
   final FirebaseFirestore _myFireStore = FirebaseFirestore.instance;
@@ -17,7 +18,7 @@ class FireStoreClass {
 
   Future<void> addTraining({
     required String uid,
-    required Map<String, dynamic> training,
+    required String training,
   }) async {
     await _myFireStore.collection('users').doc(uid).update({
       'trainings': FieldValue.arrayUnion(

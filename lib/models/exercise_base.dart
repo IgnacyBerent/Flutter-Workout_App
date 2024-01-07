@@ -1,4 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 class Exercise {
+  final String name;
+  final double weight;
+  final int reps;
+  final int bonusReps;
   Exercise({
     required this.name,
     required this.weight,
@@ -6,10 +13,28 @@ class Exercise {
     required this.bonusReps,
   });
 
-  final String name;
-  final double weight;
-  final int reps;
-  final int bonusReps;
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'name': name,
+      'weight': weight,
+      'reps': reps,
+      'bonusReps': bonusReps,
+    };
+  }
+
+  factory Exercise.fromMap(Map<String, dynamic> map) {
+    return Exercise(
+      name: map['name'] as String,
+      weight: map['weight'] as double,
+      reps: map['reps'] as int,
+      bonusReps: map['bonusReps'] as int,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Exercise.fromJson(String source) =>
+      Exercise.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 enum ExerciseName {

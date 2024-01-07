@@ -1,10 +1,14 @@
+import 'package:workout_app/firestore/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:workout_app/models/exercise_base.dart';
 import 'package:workout_app/models/training.dart';
 import 'package:intl/intl.dart';
 import 'package:workout_app/screens/exercises.dart';
 import 'package:workout_app/widgets/exercise_card_outer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
+import 'package:workout_app/firestore/firestore.dart';
 
 class NewTrainingScreen extends ConsumerStatefulWidget {
   const NewTrainingScreen({super.key});
@@ -14,12 +18,69 @@ class NewTrainingScreen extends ConsumerStatefulWidget {
 }
 
 class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
-  var _selectedSplit = Split.I;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FireStoreClass _db = FireStoreClass();
+  var _selectedSplit = 'I';
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+  String _selectedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  final User? user = Auth().currentUser;
+
+  void _presentDatePicker() async {
+    final now = DateTime.now();
+    final firstDate = DateTime(now.year - 1, now.month, now.day);
+    final pickedDate = await showDatePicker(
+        context: context,
+        initialDate: now,
+        firstDate: firstDate,
+        lastDate: now);
+    setState(() {
+      _selectedDate = DateFormat('dd-MM-YYYY').format(pickedDate!);
+    });
+  }
+
+  Future<void> _saveTraining() async {
+    // check if there is at least one exercise added
+    if (ref.read(exerciseProvider).isEmpty) {
+      //show dialog
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('No exercises added'),
+          content: const Text('Please add at least one exercise'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+    await _db.addTraining(
+      uid: user!.uid,
+      training: Training(
+        date: _selectedDate,
+        split: _selectedSplit,
+        exercises: ref.read(exerciseProvider),
+      ).toJson(),
+    );
+    if (!context.mounted) {
+      return;
+    }
+
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final _addedExercises = ref.watch(exerciseProvider);
+    final List<Exercise> _addedExercises = ref.watch(exerciseProvider);
 
     Widget content = const Center(
       child: Column(
@@ -60,7 +121,7 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
                         value: _selectedSplit,
                         items: Split.values
                             .map((split) => DropdownMenuItem(
-                                  value: split,
+                                  value: split.toString().split('.')[1],
                                   child: Text(split.toString().split('.')[1]),
                                 ))
                             .toList(),
@@ -69,7 +130,7 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
                         ),
                         onChanged: (value) {
                           setState(() {
-                            _selectedSplit = value as Split;
+                            _selectedSplit = value as String;
                           });
                         },
                       ),
@@ -77,11 +138,13 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
                     const SizedBox(width: 30),
                     Expanded(
                       child: TextFormField(
-                        keyboardType: TextInputType.datetime,
-                        initialValue:
-                            DateFormat('dd-MM-yyyy').format(DateTime.now()),
+                        readOnly: true,
+                        controller: TextEditingController()
+                          ..text =
+                              _selectedDate, // show the selected date in the text field
+                        onTap: _presentDatePicker,
                         decoration: const InputDecoration(
-                          labelText: 'Date:  (DD-MM-YYYY)',
+                          labelText: 'Date',
                         ),
                       ),
                     ),
@@ -130,8 +193,10 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
                         ),
                       ),
                     ),
-                    onPressed: () {},
-                    child: const Text('Save'),
+                    onPressed: _isLoading ? null : _saveTraining,
+                    child: _isLoading
+                        ? const CircularProgressIndicator()
+                        : const Text('Save'),
                   ),
                 ),
               ],
