@@ -12,10 +12,10 @@ class ExerciseNotifier extends StateNotifier<List<Exercise>> {
     state = state.where((e) => e != exercise).toList();
   }
 
-  void update(Exercise exercise) {
+  void update(Exercise editedExercise, Exercise exercise) {
     state = [
       for (final e in state)
-        if (e == exercise) exercise else e
+        if (e == exercise) editedExercise else e
     ];
   }
 

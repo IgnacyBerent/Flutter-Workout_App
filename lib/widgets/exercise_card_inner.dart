@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workout_app/models/exercise_base.dart';
+import 'package:workout_app/screens/edit_exercise.dart';
 import 'package:workout_app/widgets/exercise_card.dart';
 
 class ExerciseCardInner extends StatelessWidget {
@@ -14,7 +15,13 @@ class ExerciseCardInner extends StatelessWidget {
       child: SizedBox(
         height: 140,
         child: InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => EditExercise(currentExercise: exercise),
+                ),
+              );
+            },
             borderRadius: BorderRadius.circular(16),
             splashColor: Theme.of(context).colorScheme.onSecondary,
             child: ExerciseCard(exercise)),
