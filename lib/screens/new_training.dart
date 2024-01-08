@@ -34,7 +34,7 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
         firstDate: firstDate,
         lastDate: now);
     setState(() {
-      _selectedDate = DateFormat('dd-MM-YYYY').format(pickedDate!);
+      _selectedDate = DateFormat('dd-MM-yyyy').format(pickedDate!);
     });
   }
 
