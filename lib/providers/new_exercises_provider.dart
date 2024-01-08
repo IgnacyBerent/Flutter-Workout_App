@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workout_app/models/exercise_base.dart';
+import 'package:workout_app/models/exercise.dart';
 
 class ExerciseNotifier extends StateNotifier<List<Exercise>> {
   ExerciseNotifier() : super([]);

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/models/training.dart';
 
 class TrainingCard extends StatelessWidget {
-  const TrainingCard({super.key});
+  const TrainingCard(this.training, {super.key});
+
+  final Training training;
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +21,14 @@ class TrainingCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Split',
+                  training.split,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 16,
                   ),
                 ),
                 Text(
-                  'Date',
+                  training.date,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                     fontSize: 14,

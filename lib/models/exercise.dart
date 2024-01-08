@@ -1,17 +1,41 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
+
 class Exercise {
+  final String id;
   final String name;
   final double weight;
   final int reps;
   final int bonusReps;
-  Exercise({
+
+  Exercise._({
+    required this.id,
     required this.name,
     required this.weight,
     required this.reps,
     required this.bonusReps,
   });
 
+  factory Exercise({
+    String id = "",
+    required String name,
+    required double weight,
+    required int reps,
+    required int bonusReps,
+  }) {
+    id = id == "" ? Uuid().v4() : id;
+    return Exercise._(
+      id: id,
+      name: name,
+      weight: weight,
+      reps: reps,
+      bonusReps: bonusReps,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'name': name,
       'weight': weight,
       'reps': reps,
@@ -21,10 +45,21 @@ class Exercise {
 
   factory Exercise.fromMap(Map<String, dynamic> map) {
     return Exercise(
+      id: map['id'] as String,
       name: map['name'] as String,
       weight: map['weight'] as double,
       reps: map['reps'] as int,
       bonusReps: map['bonusReps'] as int,
+    );
+  }
+
+  factory Exercise.fromSnapshot(DocumentSnapshot snapshot) {
+    return Exercise(
+      id: snapshot.id,
+      name: snapshot['name'] as String,
+      weight: snapshot['weight'] as double,
+      reps: snapshot['reps'] as int,
+      bonusReps: snapshot['bonusReps'] as int,
     );
   }
 }

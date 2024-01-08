@@ -25,7 +25,7 @@ class _ExercisesScreenState extends ConsumerState<ExercisesScreen> {
         itemCount: _addedExercises.length,
         itemBuilder: (context, index) {
           return Dismissible(
-            key: ValueKey(_addedExercises[index].name),
+            key: ValueKey(_addedExercises[index].id),
             onDismissed: (direction) => ref
                 .read(exerciseProvider.notifier)
                 .remove(_addedExercises[index]),

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:workout_app/models/exercise_base.dart';
+import 'package:workout_app/models/exercise.dart';
 
 enum Split {
   I,
@@ -26,7 +26,7 @@ class Training {
     return <String, dynamic>{
       'date': date,
       'split': split.toString(),
-      'exercises': exercises.map((x) => x.toMap()).toList(),
+      'exercises': exercises,
     };
   }
 
@@ -42,7 +42,7 @@ class Training {
     );
   }
 
-  factory Training.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory Training.fromSnapshot(DocumentSnapshot<Object?> doc) {
     return Training(
       date: doc['date'] as String,
       split: doc['split'] as String,
