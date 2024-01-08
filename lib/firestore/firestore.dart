@@ -45,4 +45,27 @@ class FireStoreClass {
           .set(exercise.toMap());
     }
   }
+
+  // function that returns list trainings 10 at a time, if there are more trainings to load
+  // it will return the last document from the previous query
+  Future<QuerySnapshot> getTrainings({
+    required String uid,
+    DocumentSnapshot? lastDocument,
+  }) async {
+    Query query = _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .orderBy('date',
+            descending: true) // Sort by the 'date' field in descending order
+        .limit(10); // Limit to 10 documents at a time
+
+    if (lastDocument != null) {
+      query = query.startAfterDocument(lastDocument);
+    }
+
+    final QuerySnapshot querySnapshot = await query.get();
+
+    return querySnapshot;
+  }
 }

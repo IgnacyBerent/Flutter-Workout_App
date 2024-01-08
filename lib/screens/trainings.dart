@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:workout_app/firestore/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/models/training.dart';
 import 'package:workout_app/widgets/new_training_card.dart';
 import 'package:workout_app/widgets/training_card.dart';
@@ -16,9 +17,9 @@ class TrainingsScreen extends StatefulWidget {
 class _TrainingsScreenState extends State<TrainingsScreen> {
   final User? user = Auth().currentUser;
   final ScrollController _scrollController = ScrollController();
-  List<DocumentSnapshot> _trainingSnapshots = [];
+  final List<DocumentSnapshot> _trainingSnapshots = [];
   DocumentSnapshot? _lastDocument;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FireStoreClass _db = FireStoreClass();
 
   @override
   void initState() {
@@ -41,19 +42,11 @@ class _TrainingsScreenState extends State<TrainingsScreen> {
   }
 
   Future<void> _loadMoreData() async {
-    Query query = _firestore
-        .collection('users')
-        .doc(user!.uid)
-        .collection('trainings')
-        .orderBy('date',
-            descending: true) // Sort by the 'date' field in descending order
-        .limit(10); // Limit to 10 documents at a time
+    final QuerySnapshot querySnapshot = await _db.getTrainings(
+      uid: user!.uid,
+      lastDocument: _lastDocument,
+    );
 
-    if (_lastDocument != null) {
-      query = query.startAfterDocument(_lastDocument!);
-    }
-
-    final QuerySnapshot querySnapshot = await query.get();
     if (querySnapshot.docs.isNotEmpty) {
       setState(() {
         _trainingSnapshots.addAll(querySnapshot.docs);
@@ -81,13 +74,11 @@ class _TrainingsScreenState extends State<TrainingsScreen> {
                   future: Training.fromSnapshot(trainingSnapshot),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator(); // Show a loading spinner while waiting
+                      return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
-                      return Text(
-                          'Error: ${snapshot.error}'); // Show error message if there's an error
+                      return Text('Error: ${snapshot.error}');
                     } else {
-                      return TrainingCard(snapshot
-                          .data!); // Show the TrainingCard when data is loaded
+                      return TrainingCard(snapshot.data!);
                     }
                   },
                 );
