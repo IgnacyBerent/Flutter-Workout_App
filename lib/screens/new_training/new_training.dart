@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/training.dart';
 import 'package:intl/intl.dart';
-import 'package:workout_app/screens/exercises.dart';
+import 'package:workout_app/screens/new_training/exercises.dart';
 import 'package:workout_app/widgets/exercise_card_outer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
@@ -41,7 +41,7 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
 
   Future<void> _saveTraining() async {
     // check if there is at least one exercise added
-    if (ref.read(exerciseProvider).isEmpty) {
+    if (ref.read(exercisesProvider).isEmpty) {
       //show dialog
       showDialog(
         context: context,
@@ -66,13 +66,13 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
     final newTraining = Training(
       date: _selectedDate,
       split: _selectedSplit,
-      exercises: ref.read(exerciseProvider),
+      exercises: ref.read(exercisesProvider),
     );
     await _db.addTraining(
       uid: user!.uid,
       training: newTraining,
     );
-    ref.read(exerciseProvider.notifier).clear();
+    ref.read(exercisesProvider.notifier).clear();
     ref.read(trainingsProvider.notifier).add(newTraining);
 
     if (!context.mounted) {
@@ -84,7 +84,7 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Exercise> _addedExercises = ref.watch(exerciseProvider);
+    final List<Exercise> _addedExercises = ref.watch(exercisesProvider);
 
     Widget content = const Center(
       child: Column(

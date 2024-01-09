@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
-import 'package:workout_app/screens/new_exercise.dart';
+import 'package:workout_app/screens/new_training/new_exercise.dart';
 import 'package:workout_app/widgets/exercise_card_inner.dart';
 
 class ExercisesScreen extends ConsumerStatefulWidget {
@@ -14,7 +14,7 @@ class ExercisesScreen extends ConsumerStatefulWidget {
 class _ExercisesScreenState extends ConsumerState<ExercisesScreen> {
   @override
   Widget build(BuildContext context) {
-    final _addedExercises = ref.watch(exerciseProvider);
+    final _addedExercises = ref.watch(exercisesProvider);
 
     Widget content = const Center(
       child: Text('No exercises added yet!'),
@@ -27,7 +27,7 @@ class _ExercisesScreenState extends ConsumerState<ExercisesScreen> {
           return Dismissible(
             key: ValueKey(_addedExercises[index].id),
             onDismissed: (direction) => ref
-                .read(exerciseProvider.notifier)
+                .read(exercisesProvider.notifier)
                 .remove(_addedExercises[index]),
             child: ExerciseCardInner(_addedExercises[index]),
           );

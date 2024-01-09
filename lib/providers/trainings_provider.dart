@@ -12,11 +12,13 @@ class TrainingsNotifier extends StateNotifier<List<Training>> {
     state = [training, ...state];
   }
 
-  void remove(Training training) {
+  void remove(String date) {
+    final training = state.firstWhere((e) => e.date == date);
     state = state.where((e) => e != training).toList();
   }
 
-  void update(Training editedTraining, Training training) {
+  void update(String previousDate, Training editedTraining) {
+    final training = state.firstWhere((e) => e.date == previousDate);
     state = [
       for (final e in state)
         if (e == training) editedTraining else e

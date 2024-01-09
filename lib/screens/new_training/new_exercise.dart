@@ -4,19 +4,16 @@ import 'package:workout_app/models/exercise.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
 
-class EditExercise extends ConsumerStatefulWidget {
-  const EditExercise({
+class NewExercise extends ConsumerStatefulWidget {
+  const NewExercise({
     super.key,
-    required this.currentExercise,
   });
 
-  final Exercise currentExercise;
-
   @override
-  ConsumerState<EditExercise> createState() => _EditExerciseState();
+  ConsumerState<NewExercise> createState() => _NewExerciseState();
 }
 
-class _EditExerciseState extends ConsumerState<EditExercise> {
+class _NewExerciseState extends ConsumerState<NewExercise> {
   final _options =
       ExerciseName.values.map((exercise) => exercise.name).toList();
   final _exerciseNameController = TextEditingController();
@@ -29,33 +26,21 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
   var _selectedReps = 0;
   var _selectedBonusReps = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _exerciseNameController.text = widget.currentExercise.name;
-    _selectedExerciseName = widget.currentExercise.name;
-    _selectedWeight = widget.currentExercise.weight;
-    _selectedReps = widget.currentExercise.reps;
-    _selectedBonusReps = widget.currentExercise.bonusReps;
-  }
-
-  void _editExercise() {
+  void _addExercise() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() {
         _isLoading = true;
       });
 
-      final editedExercise = Exercise(
+      final newExercise = Exercise(
         name: _selectedExerciseName,
         weight: _selectedWeight,
         reps: _selectedReps,
         bonusReps: _selectedBonusReps,
       );
 
-      ref
-          .read(exerciseProvider.notifier)
-          .update(editedExercise, widget.currentExercise);
+      ref.read(exercisesProvider.notifier).add(newExercise);
       Navigator.of(context).pop();
     }
   }
@@ -89,6 +74,7 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                   return TextFormField(
                     controller: controller,
                     focusNode: focusNode,
+                    autofocus: true,
                     decoration: const InputDecoration(
                       labelText: 'Exercise Name',
                       border: OutlineInputBorder(
@@ -116,7 +102,6 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
               const SizedBox(height: 15),
               TextFormField(
                 keyboardType: TextInputType.number,
-                initialValue: widget.currentExercise.weight.toString(),
                 decoration: const InputDecoration(
                   labelText: 'Weight (kg)',
                   border: OutlineInputBorder(
@@ -140,7 +125,6 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
               const SizedBox(height: 15),
               TextFormField(
                 keyboardType: TextInputType.number,
-                initialValue: widget.currentExercise.reps.toString(),
                 decoration: const InputDecoration(
                   labelText: 'Reps',
                   border: OutlineInputBorder(
@@ -163,7 +147,7 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
               const SizedBox(height: 15),
               TextFormField(
                 keyboardType: TextInputType.number,
-                initialValue: widget.currentExercise.bonusReps.toString(),
+                initialValue: '0',
                 decoration: const InputDecoration(
                   labelText: 'Bonus Reps',
                   border: OutlineInputBorder(
@@ -258,7 +242,7 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                 width: 120,
                 height: 43,
                 child: ElevatedButton(
-                  onPressed: _isLoading ? null : _editExercise,
+                  onPressed: _isLoading ? null : _addExercise,
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
                         Theme.of(context).colorScheme.tertiaryContainer,
@@ -271,7 +255,7 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                           ),
                         )
                       : Text(
-                          'Edit',
+                          'Add',
                           style:
                               Theme.of(context).textTheme.bodyMedium!.copyWith(
                                     color: Theme.of(context)

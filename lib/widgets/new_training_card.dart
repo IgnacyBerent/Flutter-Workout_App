@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
-import 'package:workout_app/screens/new_training.dart';
+import 'package:workout_app/screens/new_training/new_training.dart';
 
 class NewTrainingCard extends ConsumerWidget {
   const NewTrainingCard({super.key});
@@ -14,7 +14,7 @@ class NewTrainingCard extends ConsumerWidget {
         height: 80,
         child: InkWell(
           onTap: () {
-            ref.read(exerciseProvider.notifier).clear();
+            ref.read(exercisesProvider.notifier).clear();
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (ctx) => const NewTrainingScreen(),
