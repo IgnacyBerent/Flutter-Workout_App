@@ -21,7 +21,7 @@ class _TabsScreenState extends State<TabsScreen> {
     String activePageTitle = 'Home';
 
     if (_selectedPageIndex == 1) {
-      activePage = TrainingsScreen();
+      activePage = const TrainingsScreen();
       activePageTitle = 'Your trainings';
     } else if (_selectedPageIndex == 2) {
       activePage = ProfileScreen();

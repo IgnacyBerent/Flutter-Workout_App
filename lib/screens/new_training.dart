@@ -9,6 +9,7 @@ import 'package:workout_app/widgets/exercise_card_outer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/firestore/firestore.dart';
+import 'package:workout_app/providers/trainings_provider.dart';
 
 class NewTrainingScreen extends ConsumerStatefulWidget {
   const NewTrainingScreen({super.key});
@@ -62,14 +63,18 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
     setState(() {
       _isLoading = true;
     });
+    final newTraining = Training(
+      date: _selectedDate,
+      split: _selectedSplit,
+      exercises: ref.read(exerciseProvider),
+    );
     await _db.addTraining(
       uid: user!.uid,
-      training: Training(
-        date: _selectedDate,
-        split: _selectedSplit,
-        exercises: ref.read(exerciseProvider),
-      ),
+      training: newTraining,
     );
+    ref.read(exerciseProvider.notifier).clear();
+    ref.read(trainingsProvider.notifier).add(newTraining);
+
     if (!context.mounted) {
       return;
     }

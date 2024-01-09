@@ -42,16 +42,11 @@ class Training {
     );
   }
 
-  static Future<Training> fromSnapshot(DocumentSnapshot<Object?> doc) async {
-    final exercisesSnap = await doc.reference.collection('exercises').get();
-    final exercises = exercisesSnap.docs
-        .map((doc) => Exercise.fromMap(doc.data() as Map<String, dynamic>))
-        .toList();
-
+  static Training fromSnapshot(DocumentSnapshot<Object?> doc) {
     return Training(
       date: doc['date'] as String,
       split: doc['split'] as String,
-      exercises: exercises,
+      exercises: [],
     );
   }
 }
