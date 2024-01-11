@@ -11,19 +11,19 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  int _selectedPageIndex = 0;
+  int _selectedPageIndex = 1;
 
-  void _selectPage(int index) => setState(() => _selectedPageIndex = index);
+  void selectPage(int index) => setState(() => _selectedPageIndex = index);
 
   @override
   Widget build(BuildContext context) {
-    Widget activePage = HomeScreen();
+    Widget activePage = HomeScreen(selectPage);
     String activePageTitle = 'Home';
 
-    if (_selectedPageIndex == 1) {
+    if (_selectedPageIndex == 2) {
       activePage = const TrainingsScreen();
       activePageTitle = 'Your trainings';
-    } else if (_selectedPageIndex == 2) {
+    } else if (_selectedPageIndex == 0) {
       activePage = ProfileScreen();
       activePageTitle = 'Your profile';
     }
@@ -34,9 +34,13 @@ class _TabsScreenState extends State<TabsScreen> {
       ),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(
-        onTap: _selectPage,
+        onTap: selectPage,
         currentIndex: _selectedPageIndex,
         items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -44,10 +48,6 @@ class _TabsScreenState extends State<TabsScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.fitness_center),
             label: 'Workouts',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
           ),
         ],
       ),
