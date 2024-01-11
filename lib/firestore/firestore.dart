@@ -68,4 +68,71 @@ class FireStoreClass {
 
     return querySnapshot;
   }
+
+  Future<void> deleteTraining({
+    required String uid,
+    required String date,
+  }) async {
+    await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .doc(date)
+        .delete();
+  }
+
+  Future<void> updateTraining({
+    required String uid,
+    required String date,
+    required String newDate,
+    required Training training,
+  }) async {
+    // Delete the old training
+    await deleteTraining(uid: uid, date: date);
+
+    Map<String, dynamic> newTraining = training.toMap();
+
+    // Remove the exercises from the training map as we will add them separately
+    List<Exercise> exercises = newTraining.remove('exercises');
+
+    // Add the training document without the exercises
+    await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .doc(newDate) // use the training date as the document ID
+        .set(newTraining);
+
+    // Add each exercise as a new document in the 'exercises' subcollection
+    for (Exercise exercise in exercises) {
+      await _myFireStore
+          .collection('users')
+          .doc(uid)
+          .collection('trainings')
+          .doc(newDate)
+          .collection('exercises')
+          .doc(exercise.id) // generate a new document ID for each exercise
+          .set(exercise.toMap());
+    }
+  }
+
+  Future<List<Exercise>> getExercises({
+    required String uid,
+    required String date,
+  }) async {
+    final QuerySnapshot querySnapshot = await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .doc(date)
+        .collection('exercises')
+        .get();
+
+    final List<Exercise> exercises = querySnapshot.docs
+        .map((doc) => Exercise.fromSnapshot(doc))
+        .toList()
+        .cast<Exercise>();
+
+    return exercises;
+  }
 }

@@ -81,7 +81,7 @@ class _TrainingsScreenState extends ConsumerState<TrainingsScreen> {
             } else {
               // Replace DocumentSnapshot with Training
               final Training training = trainings[index - 1];
-              return TrainingCard(training);
+              return TrainingCard(split: training.split, date: training.date);
             }
           },
         ),

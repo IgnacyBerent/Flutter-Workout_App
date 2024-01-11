@@ -1,8 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_app/models/exercise.dart';
 
-class ExercisesNotifier extends StateNotifier<List<Exercise>> {
-  ExercisesNotifier() : super([]);
+class EditExercisesNotifier extends StateNotifier<List<Exercise>> {
+  EditExercisesNotifier() : super([]);
+
+  void load(List<Exercise> exercises) {
+    state = exercises;
+  }
 
   void add(Exercise exercise) {
     state = [...state, exercise];
@@ -24,6 +28,6 @@ class ExercisesNotifier extends StateNotifier<List<Exercise>> {
   }
 }
 
-final exercisesProvider =
-    StateNotifierProvider<ExercisesNotifier, List<Exercise>>(
-        (ref) => ExercisesNotifier());
+final editExercisesProvider =
+    StateNotifierProvider<EditExercisesNotifier, List<Exercise>>(
+        (ref) => EditExercisesNotifier());
