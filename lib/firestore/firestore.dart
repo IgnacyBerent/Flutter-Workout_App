@@ -73,6 +73,21 @@ class FireStoreClass {
     required String uid,
     required String date,
   }) async {
+    // Get reference to the subcollection
+    CollectionReference exercises = _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .doc(date)
+        .collection('exercises');
+
+    // Delete all documents in the subcollection
+    QuerySnapshot querySnapshot = await exercises.get();
+    for (var doc in querySnapshot.docs) {
+      await doc.reference.delete();
+    }
+
+    // Delete the main document
     await _myFireStore
         .collection('users')
         .doc(uid)

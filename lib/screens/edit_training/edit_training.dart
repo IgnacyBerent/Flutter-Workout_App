@@ -67,12 +67,15 @@ class _EditTrainingScreenState extends ConsumerState<EditTrainingScreen> {
             child: const Text('Yes'),
             onPressed: () async {
               ref.read(trainingsProvider.notifier).remove(widget.date);
-              Navigator.of(ctx).pop();
-              Navigator.of(context).pop();
               await _db.deleteTraining(
                 uid: user!.uid,
                 date: widget.date,
               );
+              if (!context.mounted) {
+                return;
+              }
+              Navigator.of(ctx).pop();
+              Navigator.of(context).pop();
             },
           ),
         ],
