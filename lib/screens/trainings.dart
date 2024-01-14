@@ -25,9 +25,6 @@ class _TrainingsScreenState extends ConsumerState<TrainingsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(trainingsProvider.notifier).clear();
-    });
     _scrollController.addListener(_scrollListener);
     _loadMoreData();
   }

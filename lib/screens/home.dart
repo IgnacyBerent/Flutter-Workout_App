@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workout_app/firestore/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:workout_app/providers/trainings_provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   HomeScreen(this.selectPage, {super.key});
 
   final User? user = Auth().currentUser;
@@ -13,7 +15,10 @@ class HomeScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(trainingsProvider.notifier).clear();
+    });
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 40),
       child: Center(
