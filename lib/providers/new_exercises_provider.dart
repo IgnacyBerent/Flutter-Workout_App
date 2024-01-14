@@ -8,6 +8,10 @@ class ExercisesNotifier extends StateNotifier<List<Exercise>> {
     state = [...state, exercise];
   }
 
+  void load(List<Exercise> exercises) {
+    state = exercises;
+  }
+
   void remove(Exercise exercise) {
     state = state.where((e) => e != exercise).toList();
   }

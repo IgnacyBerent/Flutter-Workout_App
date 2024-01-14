@@ -150,4 +150,39 @@ class FireStoreClass {
 
     return exercises;
   }
+
+  // searches for training with the same split and date closest to the given
+  Future<List<Exercise>> getLastTraining({
+    required String uid,
+    required String split,
+    required String date,
+  }) async {
+    final QuerySnapshot querySnapshot = await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .where('split', isEqualTo: split)
+        .where('date', isLessThan: date)
+        .orderBy('date', descending: true)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) {
+      return [];
+    }
+
+    final trainingId = querySnapshot.docs.first.id;
+    final exercisesCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .doc(trainingId)
+        .collection('exercises');
+    final exercisesSnapshot = await exercisesCollection.get();
+    final exercises = exercisesSnapshot.docs.map((doc) {
+      return Exercise.fromSnapshot(doc);
+    }).toList();
+
+    return exercises;
+  }
 }

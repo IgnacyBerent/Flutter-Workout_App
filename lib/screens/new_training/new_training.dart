@@ -23,6 +23,7 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
   var _selectedSplit = 'I';
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  bool _isLoadingLT = false;
   String _selectedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
   final User? user = Auth().currentUser;
 
@@ -37,6 +38,43 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
     setState(() {
       _selectedDate = DateFormat('dd-MM-yyyy').format(pickedDate!);
     });
+  }
+
+  Future<void> _fetchLastTraining() async {
+    setState(() {
+      _isLoadingLT = true;
+    });
+    final List<Exercise> lastTrainingExercises = await _db.getLastTraining(
+        uid: user!.uid, split: _selectedSplit, date: _selectedDate);
+    if (lastTrainingExercises.isNotEmpty) {
+      ref.read(exercisesProvider.notifier).load(lastTrainingExercises);
+      setState(() {
+        _isLoadingLT = false;
+      });
+    } else {
+      setState(() {
+        _isLoadingLT = false;
+      });
+      if (!context.mounted) {
+        return;
+      }
+      //show dialog
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('No last training found'),
+          content: const Text('Please add exercises manually'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Future<void> _saveTraining() async {
@@ -84,7 +122,7 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Exercise> _addedExercises = ref.watch(exercisesProvider);
+    final List<Exercise> addedExercises = ref.watch(exercisesProvider);
 
     Widget content = const Center(
       child: Column(
@@ -97,11 +135,11 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
       ),
     );
 
-    if (_addedExercises.isNotEmpty) {
+    if (addedExercises.isNotEmpty) {
       content = ListView.builder(
-        itemCount: _addedExercises.length,
+        itemCount: addedExercises.length,
         itemBuilder: (context, index) {
-          return ExerciseCardOuter(_addedExercises[index]);
+          return ExerciseCardOuter(addedExercises[index]);
         },
       );
     }
@@ -166,8 +204,12 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
                         ),
                       ),
                     ),
-                    onPressed: () {},
-                    child: const Text('Copy last training'),
+                    onPressed: _isLoadingLT || addedExercises.isNotEmpty
+                        ? null
+                        : _fetchLastTraining,
+                    child: _isLoadingLT
+                        ? const CircularProgressIndicator()
+                        : const Text('Copy last training'),
                   ),
                 ),
                 const SizedBox(height: 20),
