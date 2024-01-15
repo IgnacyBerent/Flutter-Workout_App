@@ -12,6 +12,14 @@ class EditExercisesNotifier extends StateNotifier<List<Exercise>> {
     state = [...state, exercise];
   }
 
+  void addWithIndex(Exercise exercise, int index) {
+    state = [
+      ...state.sublist(0, index),
+      exercise,
+      ...state.sublist(index),
+    ];
+  }
+
   void remove(Exercise exercise) {
     state = state.where((e) => e != exercise).toList();
   }

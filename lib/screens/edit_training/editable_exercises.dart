@@ -14,24 +14,41 @@ class EditableExercisesScreen extends ConsumerStatefulWidget {
 }
 
 class _ExercisesScreenState extends ConsumerState<EditableExercisesScreen> {
+  void _removeExercise(Exercise exercise, int index) {
+    ref.read(editExercisesProvider.notifier).remove(exercise);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Exercise removed.'),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'UNDO',
+          onPressed: () {
+            ref
+                .read(editExercisesProvider.notifier)
+                .addWithIndex(exercise, index);
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<Exercise> _addedExercises = ref.watch(editExercisesProvider);
+    final List<Exercise> addedExercises = ref.watch(editExercisesProvider);
 
     Widget content = const Center(
       child: Text('No exercises added yet!'),
     );
 
-    if (_addedExercises.isNotEmpty) {
+    if (addedExercises.isNotEmpty) {
       content = ListView.builder(
-        itemCount: _addedExercises.length,
+        itemCount: addedExercises.length,
         itemBuilder: (context, index) {
           return Dismissible(
-            key: ValueKey(_addedExercises[index].id),
-            onDismissed: (direction) => ref
-                .read(editExercisesProvider.notifier)
-                .remove(_addedExercises[index]),
-            child: ExerciseCardInner(_addedExercises[index], edit: true),
+            key: ValueKey(addedExercises[index].id),
+            onDismissed: (direction) =>
+                _removeExercise(addedExercises[index], index),
+            child: ExerciseCardInner(addedExercises[index], edit: true),
           );
         },
       );

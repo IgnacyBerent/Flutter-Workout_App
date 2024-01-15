@@ -8,6 +8,14 @@ class ExercisesNotifier extends StateNotifier<List<Exercise>> {
     state = [...state, exercise];
   }
 
+  void addWithIndex(Exercise exercise, int index) {
+    state = [
+      ...state.sublist(0, index),
+      exercise,
+      ...state.sublist(index),
+    ];
+  }
+
   void load(List<Exercise> exercises) {
     state = exercises;
   }

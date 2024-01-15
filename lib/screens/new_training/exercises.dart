@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/screens/new_training/new_exercise.dart';
 import 'package:workout_app/widgets/exercise_card_inner.dart';
@@ -12,24 +13,39 @@ class ExercisesScreen extends ConsumerStatefulWidget {
 }
 
 class _ExercisesScreenState extends ConsumerState<ExercisesScreen> {
+  void _removeExercise(Exercise exercise, int index) {
+    ref.read(exercisesProvider.notifier).remove(exercise);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Exercise removed.'),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'UNDO',
+          onPressed: () {
+            ref.read(exercisesProvider.notifier).addWithIndex(exercise, index);
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _addedExercises = ref.watch(exercisesProvider);
+    final addedExercises = ref.watch(exercisesProvider);
 
     Widget content = const Center(
       child: Text('No exercises added yet!'),
     );
 
-    if (_addedExercises.isNotEmpty) {
+    if (addedExercises.isNotEmpty) {
       content = ListView.builder(
-        itemCount: _addedExercises.length,
+        itemCount: addedExercises.length,
         itemBuilder: (context, index) {
           return Dismissible(
-            key: ValueKey(_addedExercises[index].id),
-            onDismissed: (direction) => ref
-                .read(exercisesProvider.notifier)
-                .remove(_addedExercises[index]),
-            child: ExerciseCardInner(_addedExercises[index]),
+            key: ValueKey(addedExercises[index].id),
+            onDismissed: (direction) =>
+                _removeExercise(addedExercises[index], index),
+            child: ExerciseCardInner(addedExercises[index]),
           );
         },
       );
