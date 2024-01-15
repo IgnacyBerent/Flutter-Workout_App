@@ -185,4 +185,62 @@ class FireStoreClass {
 
     return exercises;
   }
+
+  // search for exercise results from the last training with the same name
+  Future<Exercise> getLastExerciseResults({
+    required String uid,
+    required String name,
+    required String date,
+    required String split,
+  }) async {
+    final QuerySnapshot querySnapshot = await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .where('split', isEqualTo: split)
+        .where('date', isLessThan: date)
+        .orderBy('date', descending: true)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) {
+      return Exercise(
+        id: '',
+        name: name,
+        weight: 0,
+        reps: 0,
+        bonusReps: 0,
+      );
+    }
+
+    final trainingId = querySnapshot.docs.first.id;
+    final exerciseQuerySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .doc(trainingId)
+        .collection('exercises')
+        .where('name', isEqualTo: name)
+        .limit(1)
+        .get();
+
+    if (exerciseQuerySnapshot.docs.isEmpty) {
+      return Exercise(
+        id: '',
+        name: name,
+        weight: 0,
+        reps: 0,
+        bonusReps: 0,
+      );
+    }
+
+    final exerciseDoc = exerciseQuerySnapshot.docs.first;
+    return Exercise(
+      id: exerciseDoc.id,
+      name: exerciseDoc['name'],
+      weight: exerciseDoc['weight'],
+      reps: exerciseDoc['reps'],
+      bonusReps: exerciseDoc['bonusReps'],
+    );
+  }
 }

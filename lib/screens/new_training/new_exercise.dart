@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:workout_app/screens/new_training/button_functions.dart';
 
 class NewExercise extends ConsumerStatefulWidget {
   const NewExercise({
@@ -25,6 +28,8 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
   var _selectedWeight = 0.0;
   var _selectedReps = 0;
   var _selectedBonusReps = 0;
+
+  final User? user = Auth().currentUser;
 
   void _addExercise() {
     if (_formKey.currentState!.validate()) {
@@ -169,10 +174,17 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
               ),
               const SizedBox(height: 25),
               SizedBox(
-                height: 70,
+                height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showPreviusResults(
+                      context: context,
+                      ref: ref,
+                      uid: user!.uid,
+                      exerciseName: _exerciseNameController.text,
+                    );
+                  },
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       const RoundedRectangleBorder(
@@ -180,13 +192,7 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                       ),
                     ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Previous'),
-                      Text('Results'),
-                    ],
-                  ),
+                  child: const Text('Previous Results'),
                 ),
               ),
               const SizedBox(height: 10),

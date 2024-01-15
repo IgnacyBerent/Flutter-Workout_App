@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/training.dart';
 import 'package:intl/intl.dart';
+import 'package:workout_app/providers/training_data_provider.dart';
 import 'package:workout_app/screens/new_training/exercises.dart';
 import 'package:workout_app/widgets/exercise_card_outer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,6 +28,15 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
   String _selectedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
   final User? user = Auth().currentUser;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(selectedDataProvider.notifier).changeSplit(_selectedSplit);
+      ref.read(selectedDataProvider.notifier).changeDate(_selectedDate);
+    });
+  }
+
   void _presentDatePicker() async {
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 1, now.month, now.day);
@@ -37,6 +47,7 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
         lastDate: now);
     setState(() {
       _selectedDate = DateFormat('dd-MM-yyyy').format(pickedDate!);
+      ref.read(selectedDataProvider.notifier).changeDate(_selectedDate);
     });
   }
 
@@ -173,6 +184,9 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
                         onChanged: (value) {
                           setState(() {
                             _selectedSplit = value as String;
+                            ref
+                                .read(selectedDataProvider.notifier)
+                                .changeSplit(_selectedSplit);
                           });
                         },
                       ),
