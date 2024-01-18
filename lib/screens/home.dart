@@ -26,6 +26,7 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           children: [
             const Text('Welcome to HIT app!', style: TextStyle(fontSize: 20)),
+            const Text('Version 1.0.1', style: TextStyle(fontSize: 12)),
             const SizedBox(height: 150),
             SizedBox(
               height: 70,
