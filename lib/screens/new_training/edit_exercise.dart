@@ -1,11 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/models/exercise.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/screens/new_training/button_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class EditExercise extends ConsumerStatefulWidget {
   const EditExercise({

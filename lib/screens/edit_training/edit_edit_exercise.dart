@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workout_app/models/exercise.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+
+import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/edit_exercises_provider.dart';
 
 class EditEditExercise extends ConsumerStatefulWidget {

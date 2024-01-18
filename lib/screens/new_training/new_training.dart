@@ -1,16 +1,17 @@
-import 'package:workout_app/firestore/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+
+import 'package:workout_app/firestore/auth.dart';
+import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/training.dart';
-import 'package:intl/intl.dart';
+import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/providers/training_data_provider.dart';
+import 'package:workout_app/providers/trainings_provider.dart';
 import 'package:workout_app/screens/new_training/exercises.dart';
 import 'package:workout_app/widgets/exercise_card_outer.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workout_app/providers/new_exercises_provider.dart';
-import 'package:workout_app/firestore/firestore.dart';
-import 'package:workout_app/providers/trainings_provider.dart';
 
 class NewTrainingScreen extends ConsumerStatefulWidget {
   const NewTrainingScreen({super.key});

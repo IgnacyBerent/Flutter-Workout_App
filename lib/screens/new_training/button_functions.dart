@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/providers/training_data_provider.dart';
 

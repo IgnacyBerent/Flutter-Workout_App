@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:workout_app/firestore/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/models/training.dart';
+import 'package:workout_app/providers/trainings_provider.dart';
 import 'package:workout_app/widgets/new_training_card.dart';
 import 'package:workout_app/widgets/training_card.dart';
-import 'package:workout_app/providers/trainings_provider.dart';
 
 class TrainingsScreen extends ConsumerStatefulWidget {
   const TrainingsScreen({super.key});

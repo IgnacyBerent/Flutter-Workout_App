@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/firestore/firestore.dart';
 

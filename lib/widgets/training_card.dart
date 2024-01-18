@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:workout_app/firestore/auth.dart';
+import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/edit_exercises_provider.dart';
 import 'package:workout_app/screens/edit_training/edit_training.dart';
-import 'package:workout_app/firestore/firestore.dart';
-import 'package:workout_app/firestore/auth.dart';
 
 class TrainingCard extends ConsumerWidget {
   TrainingCard({super.key, required this.split, required this.date});
