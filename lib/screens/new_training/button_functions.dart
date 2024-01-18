@@ -49,3 +49,22 @@ Future<void> showPreviusResults({
     );
   }
 }
+
+void showOneRepMax({
+  required BuildContext context,
+  required double lift,
+  required int reps,
+}) {
+  double result = lift * (1 + (reps / 30));
+  showDialog(
+      context: context,
+      builder: ((context) => AlertDialog(
+            title: const Text('One-Rep Max:'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(result.toStringAsFixed(1)),
+              ],
+            ),
+          )));
+}

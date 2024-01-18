@@ -22,10 +22,11 @@ class EditExercise extends ConsumerStatefulWidget {
 class _EditExerciseState extends ConsumerState<EditExercise> {
   final _options =
       ExerciseName.values.map((exercise) => exercise.name).toList();
-  final _exerciseNameController = TextEditingController();
-  bool _isLoading = false;
-
   final _formKey = GlobalKey<FormState>();
+  final _exerciseNameController = TextEditingController();
+  final _selectedWeightController = TextEditingController();
+  final _selectedRepsController = TextEditingController();
+  bool _isLoading = false;
 
   var _selectedExerciseName = '';
   var _selectedWeight = 0.0;
@@ -42,6 +43,8 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
     _selectedWeight = widget.currentExercise.weight;
     _selectedReps = widget.currentExercise.reps;
     _selectedBonusReps = widget.currentExercise.bonusReps;
+    _selectedRepsController.text = widget.currentExercise.reps.toString();
+    _selectedWeightController.text = widget.currentExercise.weight.toString();
   }
 
   void _editExercise() {
@@ -68,6 +71,8 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
   @override
   void dispose() {
     _exerciseNameController.dispose();
+    _selectedWeightController.dispose();
+    _selectedRepsController.dispose();
     super.dispose();
   }
 
@@ -121,7 +126,7 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
               const SizedBox(height: 15),
               TextFormField(
                 keyboardType: TextInputType.number,
-                initialValue: widget.currentExercise.weight.toString(),
+                controller: _selectedWeightController,
                 decoration: const InputDecoration(
                   labelText: 'Weight (kg)',
                   border: OutlineInputBorder(
@@ -140,12 +145,13 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                   }
                   return null;
                 },
-                onSaved: (value) => _selectedWeight = double.parse(value!),
+                onSaved: (value) => _selectedWeight =
+                    double.parse(_selectedWeightController.text),
               ),
               const SizedBox(height: 15),
               TextFormField(
                 keyboardType: TextInputType.number,
-                initialValue: widget.currentExercise.reps.toString(),
+                controller: _selectedRepsController,
                 decoration: const InputDecoration(
                   labelText: 'Reps',
                   border: OutlineInputBorder(
@@ -163,7 +169,8 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                   }
                   return null;
                 },
-                onSaved: (value) => _selectedReps = int.parse(value!),
+                onSaved: (value) =>
+                    _selectedReps = int.parse(_selectedRepsController.text),
               ),
               const SizedBox(height: 15),
               TextFormField(
@@ -216,7 +223,13 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showOneRepMax(
+                      context: context,
+                      lift: double.parse(_selectedWeightController.text),
+                      reps: int.parse(_selectedRepsController.text),
+                    );
+                  },
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       const RoundedRectangleBorder(
@@ -224,7 +237,7 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                       ),
                     ),
                   ),
-                  child: Text('Calculate One-Rep Max'),
+                  child: const Text('Calculate One-Rep Max'),
                 ),
               ),
               const SizedBox(height: 10),

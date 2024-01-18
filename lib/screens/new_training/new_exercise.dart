@@ -20,6 +20,8 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
   final _options =
       ExerciseName.values.map((exercise) => exercise.name).toList();
   final _exerciseNameController = TextEditingController();
+  final _selectedWeightController = TextEditingController();
+  final _selectedRepsController = TextEditingController();
   bool _isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
@@ -53,6 +55,8 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
   @override
   void dispose() {
     _exerciseNameController.dispose();
+    _selectedWeightController.dispose();
+    _selectedRepsController.dispose();
     super.dispose();
   }
 
@@ -107,6 +111,7 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
               const SizedBox(height: 15),
               TextFormField(
                 keyboardType: TextInputType.number,
+                controller: _selectedWeightController,
                 decoration: const InputDecoration(
                   labelText: 'Weight (kg)',
                   border: OutlineInputBorder(
@@ -130,6 +135,7 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
               const SizedBox(height: 15),
               TextFormField(
                 keyboardType: TextInputType.number,
+                controller: _selectedRepsController,
                 decoration: const InputDecoration(
                   labelText: 'Reps',
                   border: OutlineInputBorder(
@@ -200,7 +206,13 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showOneRepMax(
+                      context: context,
+                      lift: double.parse(_selectedWeightController.text),
+                      reps: int.parse(_selectedRepsController.text),
+                    );
+                  },
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       const RoundedRectangleBorder(
@@ -208,7 +220,7 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                       ),
                     ),
                   ),
-                  child: Text('Calculate One-Rep Max'),
+                  child: const Text('Calculate One-Rep Max'),
                 ),
               ),
               const SizedBox(height: 10),
