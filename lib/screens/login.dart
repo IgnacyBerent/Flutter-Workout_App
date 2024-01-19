@@ -32,7 +32,13 @@ class _LoginScreenState extends State<LoginScreen> {
       } on FirebaseAuthException catch (e) {
         setState(() {
           _isLoading = false;
-          errorMessage = e.message;
+          if (e.code == 'invalid-email') {
+            errorMessage = 'Invalid email adress.';
+          } else if (e.code == 'invalid-credential') {
+            errorMessage = 'Wrong password';
+          } else {
+            errorMessage = e.message;
+          }
         });
 
         // Show dialog if login fails
