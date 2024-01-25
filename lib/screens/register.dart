@@ -166,11 +166,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      // Choose the icon based on the visibility state
                       _obscureText ? Icons.visibility : Icons.visibility_off,
                     ),
                     onPressed: () {
-                      // Change the state of the password visibility on button press
                       setState(() {
                         _obscureText = !_obscureText;
                       });

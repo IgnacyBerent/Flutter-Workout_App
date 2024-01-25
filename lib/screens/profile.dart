@@ -18,7 +18,7 @@ class ProfileScreen extends ConsumerWidget {
 
     return Center(
       child: Column(
-        children: [],
+        children: [Text('Your personal records:')],
       ),
     );
   }

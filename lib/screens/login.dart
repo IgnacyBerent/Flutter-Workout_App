@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   var _enteredPassword = '';
   var _isLoading = false;
   String? errorMessage = '';
+  bool _obscureText = true;
 
   Future<void> _signIn() async {
     FocusScope.of(context).unfocus(); // close keyboard
@@ -144,8 +145,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                  ),
                 ),
-                obscureText: true,
+                obscureText: _obscureText,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your password';
