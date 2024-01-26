@@ -172,7 +172,7 @@ class FireStoreClass {
     }
 
     final trainingId = querySnapshot.docs.first.id;
-    final exercisesCollection = FirebaseFirestore.instance
+    final exercisesCollection = _myFireStore
         .collection('users')
         .doc(uid)
         .collection('trainings')
@@ -214,7 +214,7 @@ class FireStoreClass {
     }
 
     final trainingId = querySnapshot.docs.first.id;
-    final exerciseQuerySnapshot = await FirebaseFirestore.instance
+    final exerciseQuerySnapshot = await _myFireStore
         .collection('users')
         .doc(uid)
         .collection('trainings')
@@ -242,5 +242,45 @@ class FireStoreClass {
       reps: exerciseDoc['reps'],
       bonusReps: exerciseDoc['bonusReps'],
     );
+  }
+
+  Future<List<double>> getRecord({
+    required String uid,
+    required String exerciseName,
+  }) async {
+    // Get all trainings for the user
+    final QuerySnapshot trainingsSnapshot = await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .get();
+
+    double maxWeight = 0;
+    double maxReps = 0;
+
+    // For each training, get the exercises and find the one with the given name
+    for (var training in trainingsSnapshot.docs) {
+      final QuerySnapshot exercisesSnapshot = await _myFireStore
+          .collection('users')
+          .doc(uid)
+          .collection('trainings')
+          .doc(training.id)
+          .collection('exercises')
+          .where('name', isEqualTo: exerciseName)
+          .get();
+
+      // Find the maximum weight and corresponding reps for the exercise
+      for (var exercise in exercisesSnapshot.docs) {
+        final weight = (exercise['weight'] as num).toDouble();
+        final reps = (exercise['reps'] as num).toDouble();
+        if (weight > maxWeight) {
+          maxWeight = weight;
+          maxReps = reps;
+        }
+      }
+    }
+
+    // Return the maximum weight and corresponding reps
+    return [maxWeight, maxReps];
   }
 }

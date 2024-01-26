@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/providers/trainings_provider.dart';
@@ -25,7 +26,17 @@ class HomeScreen extends ConsumerWidget {
       child: Center(
         child: Column(
           children: [
-            const Text('Welcome to HIT app!', style: TextStyle(fontSize: 20)),
+            GradientText(
+              'Welcome to HIT app!',
+              style: const TextStyle(
+                fontSize: 20.0,
+              ),
+              colors: [
+                Theme.of(context).colorScheme.onPrimaryContainer,
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.secondary
+              ],
+            ),
             const Text('Version 1.0.1', style: TextStyle(fontSize: 12)),
             const SizedBox(height: 150),
             SizedBox(

@@ -23,7 +23,7 @@ class Exercise {
     required int reps,
     required int bonusReps,
   }) {
-    id = id == "" ? Uuid().v4() : id;
+    id = id == "" ? const Uuid().v4() : id;
     return Exercise._(
       id: id,
       name: name,
