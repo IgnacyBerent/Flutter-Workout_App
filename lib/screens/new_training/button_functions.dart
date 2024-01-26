@@ -33,6 +33,8 @@ Future<void> showPreviusResults({
           content: Text('No previous results found')),
     );
   } else {
+    double orm =
+        lastExericeResults.weight * (1 + (lastExericeResults.reps / 30));
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -43,7 +45,7 @@ Future<void> showPreviusResults({
             Text('Weight: ${lastExericeResults.weight}'),
             Text('Reps: ${lastExericeResults.reps}'),
             Text('Bonus Reps: ${lastExericeResults.bonusReps}'),
-            Text('One-Rep Max:')
+            Text('One-Rep Max: ${orm.toStringAsFixed(1)}')
           ],
         ),
       ),
