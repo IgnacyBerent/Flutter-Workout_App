@@ -8,6 +8,7 @@ import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/screens/new_training/button_functions.dart';
+import 'package:workout_app/widgets/exercise_list_tile.dart';
 
 class EditExercise extends ConsumerStatefulWidget {
   const EditExercise({
@@ -124,8 +125,9 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                     onSaved: (value) => _selectedExerciseName = value!,
                   );
                 },
-                itemBuilder: (context, value) => ListTile(
-                  title: Text(value.toString()),
+                itemBuilder: (context, value) => ExerciseListTile(
+                  context: context,
+                  value: value,
                 ),
                 onSelected: (value) {
                   _exerciseNameController.text = value.toString();

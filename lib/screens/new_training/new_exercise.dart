@@ -8,6 +8,7 @@ import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/screens/new_training/button_functions.dart';
+import 'package:workout_app/widgets/exercise_list_tile.dart';
 
 class NewExercise extends ConsumerStatefulWidget {
   const NewExercise({
@@ -113,9 +114,9 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                     onSaved: (value) => _selectedExerciseName = value!,
                   );
                 },
-                // TODO: Add icons for exercises
-                itemBuilder: (context, value) => ListTile(
-                  title: Text(value.toString()),
+                itemBuilder: (context, value) => ExerciseListTile(
+                  context: context,
+                  value: value,
                 ),
                 onSelected: (value) {
                   _exerciseNameController.text = value.toString();
