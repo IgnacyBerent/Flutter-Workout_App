@@ -36,7 +36,7 @@ class ProfileScreen extends ConsumerWidget {
       builder:
           (BuildContext context, AsyncSnapshot<List<List<double>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
@@ -45,7 +45,7 @@ class ProfileScreen extends ConsumerWidget {
           final deadliftRecord = snapshot.data![2];
 
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+            padding: const EdgeInsets.fromLTRB(20, 120, 20, 20),
             child: Center(
               child: Column(
                 children: [
@@ -107,9 +107,9 @@ class ProfileScreen extends ConsumerWidget {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Check Exercise'),
+                          Text('Check Progress'),
                           SizedBox(width: 10),
-                          Icon(Icons.fitness_center),
+                          Icon(Icons.show_chart),
                         ],
                       ),
                     ),

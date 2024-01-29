@@ -27,7 +27,6 @@ class ExerciseCardInner extends StatelessWidget {
                 ),
               );
             },
-            borderRadius: BorderRadius.circular(16),
             splashColor: Theme.of(context).colorScheme.onSecondary,
             child: ExerciseCard(exercise)),
       ),

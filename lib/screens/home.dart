@@ -22,7 +22,7 @@ class HomeScreen extends ConsumerWidget {
       ref.read(trainingsProvider.notifier).clear();
     });
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 40),
+      padding: const EdgeInsets.fromLTRB(20, 120, 20, 20),
       child: Center(
         child: Column(
           children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/gradient_background_color.dart';
 
 import 'package:workout_app/screens/home.dart';
 import 'package:workout_app/screens/profile.dart';
@@ -30,11 +31,16 @@ class _TabsScreenState extends State<TabsScreen> {
     }
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(activePageTitle),
       ),
-      body: activePage,
+      body: Container(
+        decoration: gradientBackground(),
+        child: activePage,
+      ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromARGB(255, 8, 0, 14),
         onTap: selectPage,
         currentIndex: _selectedPageIndex,
         items: const [

@@ -67,7 +67,7 @@ class _TrainingsScreenState extends ConsumerState<TrainingsScreen> {
     final trainings = ref.watch(trainingsProvider);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+      padding: const EdgeInsets.fromLTRB(40, 100, 40, 30),
       child: Center(
         child: ListView.builder(
           controller: _scrollController,

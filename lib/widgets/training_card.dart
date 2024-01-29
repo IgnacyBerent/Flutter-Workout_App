@@ -38,7 +38,6 @@ class TrainingCard extends ConsumerWidget {
               ),
             );
           },
-          borderRadius: BorderRadius.circular(16),
           splashColor: Theme.of(context).colorScheme.onSecondary,
           child: Card(
             child: Column(
