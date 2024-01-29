@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:workout_app/charts/exercise_progress_chart.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/training.dart';
 
@@ -328,5 +329,65 @@ class FireStoreClass {
         List<String>.from(doc['names']);
 
     return currentCustomExercisesNames;
+  }
+
+  Future<void> deleteCustomExerciseName({
+    required String uid,
+    required String exerciseName,
+  }) async {
+    // Get the current custom exercises names
+    final currentCustomExercisesNames = await getCustomExericsesNames(
+      uid: uid,
+    );
+
+    // Remove the exercise name from the current ones
+    currentCustomExercisesNames.remove(exerciseName);
+
+    // Update the custom exercises names
+    await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('customExercisesNames')
+        .doc('customExercisesNames')
+        .set({'names': currentCustomExercisesNames});
+  }
+
+  Future<List<ExerciseProgress>> getExerciseRecords({
+    required String uid,
+    required String exerciseName,
+  }) async {
+    final QuerySnapshot trainingsSnapshot = await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .get();
+
+    final List<ExerciseProgress> exerciseRecords = [];
+
+    // Create a list of futures for each 'training' document
+    final futures = trainingsSnapshot.docs.map((training) async {
+      final exercisesSnapshot = await _myFireStore
+          .collection('users')
+          .doc(uid)
+          .collection('trainings')
+          .doc(training.id)
+          .collection('exercises')
+          .where('name', isEqualTo: exerciseName)
+          .get();
+
+      for (var exercise in exercisesSnapshot.docs) {
+        final weight = exercise['weight'];
+        final reps = exercise['reps'];
+        final oneRepMax = weight * (1 + (reps / 30));
+        final parts = training.id.split('-');
+        final reformattedDate = '${parts[2]}-${parts[1]}-${parts[0]}';
+        final trainingDate = DateTime.parse(reformattedDate);
+        exerciseRecords.add(ExerciseProgress(trainingDate, oneRepMax));
+      }
+    });
+
+    // Wait for all futures to complete
+    await Future.wait(futures);
+    return exerciseRecords;
   }
 }

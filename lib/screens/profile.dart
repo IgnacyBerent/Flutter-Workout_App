@@ -22,7 +22,7 @@ class ProfileScreen extends ConsumerWidget {
     });
     Future<List<List<double>>> fetchRecords() async {
       final benchRecord =
-          await _db.getRecord(uid: user!.uid, exerciseName: "BenchPress");
+          await _db.getRecord(uid: user!.uid, exerciseName: "Bench Press");
       final squatRecord =
           await _db.getRecord(uid: user!.uid, exerciseName: "Squat");
       final deadliftRecord =
@@ -87,7 +87,7 @@ class ProfileScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      recordTableRow('BenchPress', benchRecord),
+                      recordTableRow('Bench Press', benchRecord),
                       recordTableRow('Squat', squatRecord),
                       recordTableRow('Deadlift', deadliftRecord),
                     ],

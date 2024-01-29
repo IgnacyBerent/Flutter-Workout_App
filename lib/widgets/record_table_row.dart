@@ -16,7 +16,7 @@ TableRow recordTableRow(String exercise, List<double> record) {
       ),
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Text('$reps', style: const TextStyle(fontSize: 18)),
+        child: Text('${reps.toInt()}', style: const TextStyle(fontSize: 18)),
       ),
     ],
   );
