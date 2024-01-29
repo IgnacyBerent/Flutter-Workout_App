@@ -6,6 +6,7 @@ import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/providers/trainings_provider.dart';
 import 'package:workout_app/firestore/firestore.dart';
+import 'package:workout_app/screens/exercise_stats.dart';
 import 'package:workout_app/widgets/record_table_row.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -96,7 +97,13 @@ class ProfileScreen extends ConsumerWidget {
                     height: 70,
                     width: 250,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => const ExerciseStatsScreen(),
+                          ),
+                        );
+                      },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
