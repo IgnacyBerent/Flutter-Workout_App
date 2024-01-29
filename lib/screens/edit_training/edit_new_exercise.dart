@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:workout_app/firestore/auth.dart';
+import 'package:workout_app/firestore/firestore.dart';
 
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/edit_exercises_provider.dart';
@@ -15,8 +18,8 @@ class EditNewExercise extends ConsumerStatefulWidget {
 }
 
 class _EditNewExerciseState extends ConsumerState<EditNewExercise> {
-  final _options =
-      ExerciseName.values.map((exercise) => exercise.name).toList();
+  final _options = exerciseImageMap.keys.toList();
+
   final _exerciseNameController = TextEditingController();
   bool _isLoading = false;
 
@@ -26,6 +29,19 @@ class _EditNewExerciseState extends ConsumerState<EditNewExercise> {
   var _selectedWeight = 0.0;
   var _selectedReps = 0;
   var _selectedBonusReps = 0;
+
+  final User? user = Auth().currentUser;
+  final FireStoreClass _db = FireStoreClass();
+
+  @override
+  void initState() {
+    super.initState();
+    _db.getCustomExericsesNames(uid: user!.uid).then((customExercisesNames) {
+      setState(() {
+        _options.addAll(customExercisesNames);
+      });
+    });
+  }
 
   void _addExercise() {
     if (_formKey.currentState!.validate()) {

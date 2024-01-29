@@ -119,6 +119,18 @@ class _EditTrainingScreenState extends ConsumerState<EditTrainingScreen> {
       newDate: _selectedDate,
       training: newTraining,
     );
+    // get all custom exercises names (those which arent in exerciseImageMap.keys)
+    final List<String> customExercisesNames = [];
+    for (Exercise exercise in ref.read(editExercisesProvider)) {
+      if (!exerciseImageMap.keys.contains(exercise.name)) {
+        customExercisesNames.add(exercise.name);
+      }
+    }
+    // add custom exercises to the firebase
+    await _db.addCustomExercisesNames(
+      uid: user!.uid,
+      exercisesNames: customExercisesNames,
+    );
     ref.read(editExercisesProvider.notifier).clear();
     ref.read(trainingsProvider.notifier).update(widget.date, newTraining);
 

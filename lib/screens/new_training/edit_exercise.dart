@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import 'package:workout_app/firestore/auth.dart';
+import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/screens/new_training/button_functions.dart';
@@ -21,8 +22,8 @@ class EditExercise extends ConsumerStatefulWidget {
 }
 
 class _EditExerciseState extends ConsumerState<EditExercise> {
-  final _options =
-      ExerciseName.values.map((exercise) => exercise.name).toList();
+  final _options = exerciseImageMap.keys.toList();
+
   final _formKey = GlobalKey<FormState>();
   final _exerciseNameController = TextEditingController();
   final _selectedWeightController = TextEditingController();
@@ -35,6 +36,7 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
   var _selectedBonusReps = 0;
 
   final User? user = Auth().currentUser;
+  final FireStoreClass _db = FireStoreClass();
 
   @override
   void initState() {
@@ -46,6 +48,11 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
     _selectedBonusReps = widget.currentExercise.bonusReps;
     _selectedRepsController.text = widget.currentExercise.reps.toString();
     _selectedWeightController.text = widget.currentExercise.weight.toString();
+    _db.getCustomExericsesNames(uid: user!.uid).then((customExercisesNames) {
+      setState(() {
+        _options.addAll(customExercisesNames);
+      });
+    });
   }
 
   void _editExercise() {

@@ -283,4 +283,50 @@ class FireStoreClass {
     // Return the maximum weight and corresponding reps
     return [maxWeight, maxReps];
   }
+
+  Future<void> addCustomExercisesNames({
+    required String uid,
+    required List<String> exercisesNames,
+  }) async {
+    // Get the current custom exercises names
+    final currentCustomExercisesNames = await getCustomExericsesNames(
+      uid: uid,
+    );
+
+    // Add the new exercises names to the current ones
+    currentCustomExercisesNames.addAll(exercisesNames);
+
+    // Remove duplicates
+    final Set<String> customExercisesNamesSet =
+        currentCustomExercisesNames.toSet();
+
+    // Update the custom exercises names
+    await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('customExercisesNames')
+        .doc('customExercisesNames')
+        .set({'names': customExercisesNamesSet.toList()});
+  }
+
+  Future<List<String>> getCustomExericsesNames({
+    required String uid,
+  }) async {
+    // Get the current custom exercises names
+    final DocumentSnapshot doc = await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('customExercisesNames')
+        .doc('customExercisesNames')
+        .get();
+
+    if (!doc.exists) {
+      return [];
+    }
+
+    final List<String> currentCustomExercisesNames =
+        List<String>.from(doc['names']);
+
+    return currentCustomExercisesNames;
+  }
 }

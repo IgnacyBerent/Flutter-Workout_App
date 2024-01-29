@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import 'package:workout_app/firestore/auth.dart';
+import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/screens/new_training/button_functions.dart';
@@ -18,8 +19,7 @@ class NewExercise extends ConsumerStatefulWidget {
 }
 
 class _NewExerciseState extends ConsumerState<NewExercise> {
-  final _options =
-      ExerciseName.values.map((exercise) => exercise.name).toList();
+  final _options = exerciseImageMap.keys.toList();
   final _exerciseNameController = TextEditingController();
   final _selectedWeightController = TextEditingController();
   final _selectedRepsController = TextEditingController();
@@ -33,6 +33,17 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
   var _selectedBonusReps = 0;
 
   final User? user = Auth().currentUser;
+  final FireStoreClass _db = FireStoreClass();
+
+  @override
+  void initState() {
+    super.initState();
+    _db.getCustomExericsesNames(uid: user!.uid).then((customExercisesNames) {
+      setState(() {
+        _options.addAll(customExercisesNames);
+      });
+    });
+  }
 
   void _addExercise() {
     if (_formKey.currentState!.validate()) {
@@ -102,6 +113,7 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                     onSaved: (value) => _selectedExerciseName = value!,
                   );
                 },
+                // TODO: Add icons for exercises
                 itemBuilder: (context, value) => ListTile(
                   title: Text(value.toString()),
                 ),
@@ -237,7 +249,7 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                       ),
                     ),
                   ),
-                  child: Text('Predict One-Rep Max'),
+                  child: const Text('Predict One-Rep Max'),
                 ),
               ),
               const SizedBox(height: 10),
@@ -253,7 +265,7 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                       ),
                     ),
                   ),
-                  child: Text('Check Progress'),
+                  child: const Text('Check Progress'),
                 ),
               ),
               const Spacer(),
