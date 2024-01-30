@@ -38,7 +38,16 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
             const Text('Version 1.0.1', style: TextStyle(fontSize: 12)),
-            const SizedBox(height: 150),
+            const SizedBox(
+              height: 250,
+              // show my AppIcon.png
+              child: Image(
+                image: AssetImage(
+                  'assets/AppIconAlpha.png',
+                ),
+              ),
+            ),
+            const Spacer(),
             SizedBox(
               height: 70,
               width: 250,
