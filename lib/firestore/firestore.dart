@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:workout_app/charts/exercise_progress_chart.dart';
 import 'package:workout_app/models/exercise.dart';
+import 'package:workout_app/models/exercise_record.dart';
 import 'package:workout_app/models/training.dart';
 
 class FireStoreClass {
@@ -245,44 +246,53 @@ class FireStoreClass {
     );
   }
 
-  Future<List<double>> getRecord({
+  Future<ExerciseRecord> getRecord({
     required String uid,
     required String exerciseName,
   }) async {
-    // Get all trainings for the user
-    final QuerySnapshot trainingsSnapshot = await _myFireStore
-        .collection('users')
-        .doc(uid)
-        .collection('trainings')
-        .get();
+    final List<ExerciseProgress> exerciseRecords = await getExerciseRecords(
+      uid: uid,
+      exerciseName: exerciseName,
+    );
 
-    double maxWeight = 0;
-    double maxReps = 0;
+    // check if there are any records
+    if (exerciseRecords.isEmpty) {
+      return ExerciseRecord(
+        weight: 0,
+        reps: 0,
+        oneRepMax: 0,
+      );
+    }
 
-    // For each training, get the exercises and find the one with the given name
-    for (var training in trainingsSnapshot.docs) {
-      final QuerySnapshot exercisesSnapshot = await _myFireStore
-          .collection('users')
-          .doc(uid)
-          .collection('trainings')
-          .doc(training.id)
-          .collection('exercises')
-          .where('name', isEqualTo: exerciseName)
-          .get();
-
-      // Find the maximum weight and corresponding reps for the exercise
-      for (var exercise in exercisesSnapshot.docs) {
-        final weight = (exercise['weight'] as num).toDouble();
-        final reps = (exercise['reps'] as num).toDouble();
-        if (weight > maxWeight) {
-          maxWeight = weight;
-          maxReps = reps;
-        }
+    // find date when one rep max was the highest
+    double maxOneRepMax = 0;
+    DateTime? maxOneRepMaxDate;
+    for (var exerciseRecord in exerciseRecords) {
+      if (exerciseRecord.oneRepMax > maxOneRepMax) {
+        maxOneRepMax = exerciseRecord.oneRepMax;
+        maxOneRepMaxDate = exerciseRecord.time;
       }
     }
 
-    // Return the maximum weight and corresponding reps
-    return [maxWeight, maxReps];
+    String formatedMaxOneRepMaxDate =
+        maxOneRepMaxDate.toString().substring(0, 10);
+    final parts = formatedMaxOneRepMaxDate.split('-');
+    formatedMaxOneRepMaxDate = '${parts[2]}-${parts[1]}-${parts[0]}';
+
+    // fetch the exercise reps and weight for the date when one rep max was the highest
+    final QuerySnapshot querySnapshot = await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .doc(formatedMaxOneRepMaxDate)
+        .collection('exercises')
+        .where('name', isEqualTo: exerciseName)
+        .get();
+
+    final exerciseDoc = querySnapshot.docs.first;
+    final ExerciseRecord record = ExerciseRecord.fromSnapshot(exerciseDoc);
+
+    return record;
   }
 
   Future<void> addCustomExercisesNames({

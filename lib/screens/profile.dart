@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 import 'package:workout_app/firestore/auth.dart';
+import 'package:workout_app/models/exercise_record.dart';
 import 'package:workout_app/providers/trainings_provider.dart';
 import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/screens/exercise_stats.dart';
@@ -20,7 +21,7 @@ class ProfileScreen extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(trainingsProvider.notifier).clear();
     });
-    Future<List<List<double>>> fetchRecords() async {
+    Future<List<ExerciseRecord>> fetchRecords() async {
       final benchRecord =
           await _db.getRecord(uid: user!.uid, exerciseName: "Bench Press");
       final squatRecord =
@@ -31,10 +32,10 @@ class ProfileScreen extends ConsumerWidget {
       return [benchRecord, squatRecord, deadliftRecord];
     }
 
-    return FutureBuilder<List<List<double>>>(
+    return FutureBuilder<List<ExerciseRecord>>(
       future: fetchRecords(),
       builder:
-          (BuildContext context, AsyncSnapshot<List<List<double>>> snapshot) {
+          (BuildContext context, AsyncSnapshot<List<ExerciseRecord>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
@@ -45,7 +46,7 @@ class ProfileScreen extends ConsumerWidget {
           final deadliftRecord = snapshot.data![2];
 
           return Padding(
-            padding: const EdgeInsets.fromLTRB(20, 120, 20, 20),
+            padding: const EdgeInsets.fromLTRB(15, 120, 15, 20),
             child: Center(
               child: Column(
                 children: [
@@ -71,20 +72,18 @@ class ProfileScreen extends ConsumerWidget {
                     children: [
                       const TableRow(
                         children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Text('Exercise',
-                                style: TextStyle(fontSize: 18)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child:
-                                Text('Weight', style: TextStyle(fontSize: 18)),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Text('Reps', style: TextStyle(fontSize: 18)),
-                          ),
+                          Text('Exercise', style: TextStyle(fontSize: 18)),
+                          Text('Weight', style: TextStyle(fontSize: 18)),
+                          Text('Reps', style: TextStyle(fontSize: 18)),
+                          Text('ORM', style: TextStyle(fontSize: 16)),
+                        ],
+                      ),
+                      const TableRow(
+                        children: [
+                          Divider(),
+                          Divider(),
+                          Divider(),
+                          Divider(),
                         ],
                       ),
                       recordTableRow('Bench Press', benchRecord),

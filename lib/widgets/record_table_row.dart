@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/models/exercise_record.dart';
 
-TableRow recordTableRow(String exercise, List<double> record) {
-  final weight = record[0];
-  final reps = record[1];
+TableRow recordTableRow(String exercise, ExerciseRecord record) {
+  final weight = record.weight;
+  final reps = record.reps;
+  final orm = record.oneRepMax.round();
 
   return TableRow(
     children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Text(exercise, style: const TextStyle(fontSize: 18)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Text('$weight', style: const TextStyle(fontSize: 18)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Text('${reps.toInt()}', style: const TextStyle(fontSize: 18)),
-      ),
+      Text(exercise, style: const TextStyle(fontSize: 16)),
+      Text('$weight', style: const TextStyle(fontSize: 16)),
+      Text('$reps', style: const TextStyle(fontSize: 16)),
+      Text('$orm', style: const TextStyle(fontSize: 16)),
     ],
   );
 }
