@@ -37,7 +37,7 @@ class HomeScreen extends ConsumerWidget {
                 Theme.of(context).colorScheme.secondary
               ],
             ),
-            const Text('Version 1.0.1', style: TextStyle(fontSize: 12)),
+            const Text('Version 1.2.1', style: TextStyle(fontSize: 12)),
             const SizedBox(
               height: 250,
               // show my AppIcon.png
