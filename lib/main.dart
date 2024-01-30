@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             foregroundColor: const Color.fromARGB(255, 182, 135, 5),
             textStyle:
-                const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             disabledForegroundColor: Colors.blue.withOpacity(0.38),
             disabledBackgroundColor: Colors.blue.withOpacity(0.12),
             backgroundColor: const Color.fromARGB(255, 8, 0, 15),

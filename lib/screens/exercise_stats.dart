@@ -4,6 +4,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:workout_app/charts/exercise_progress_chart.dart';
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/firestore/firestore.dart';
+import 'package:workout_app/gradient_background_color.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/widgets/exercise_list_tile.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -68,97 +69,102 @@ class _ExerciseStatsScreenState extends State<ExerciseStatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Exercise Stats'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: TypeAheadField(
-                suggestionsCallback: ((search) => _options
-                    .where((option) =>
-                        option.toLowerCase().contains(search.toLowerCase()))
-                    .toList()),
-                controller: _exerciseNameController,
-                builder: (context, controller, focusNode) {
-                  return TextFormField(
-                    controller: controller,
-                    focusNode: focusNode,
-                    autofocus: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Exercise Name',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0),
+      body: Container(
+        decoration: gradientBackground(),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 120, 0, 20),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: TypeAheadField(
+                  suggestionsCallback: ((search) => _options
+                      .where((option) =>
+                          option.toLowerCase().contains(search.toLowerCase()))
+                      .toList()),
+                  controller: _exerciseNameController,
+                  builder: (context, controller, focusNode) {
+                    return TextFormField(
+                      controller: controller,
+                      focusNode: focusNode,
+                      autofocus: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Exercise Name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                itemBuilder: (context, value) => ExerciseListTile(
-                  context: context,
-                  value: value,
-                ),
-                onSelected: (value) {
-                  _exerciseNameController.text = value.toString();
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            // button which will generate the chart if the exercise name is valid
-            ElevatedButton(
-              onPressed: () {
-                if (_options.contains(_exerciseNameController.text)) {
-                  setState(() {
-                    _isLoading = true;
-                    exerciseChartName = _exerciseNameController.text;
-                  });
-                  _exerciseNameController.clear();
-                  // unfocus the text field
-                  FocusScope.of(context).unfocus();
-                  _fetchExerciseRecords(
-                    exerciseName: exerciseChartName,
-                  );
-                } else {
-                  // show Dialog
-                  showDialog(
+                    );
+                  },
+                  itemBuilder: (context, value) => ExerciseListTile(
                     context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: const Text('Exercise Not Found'),
-                      content: const Text('Please enter a valid exercise name'),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Okay'),
-                          onPressed: () {
-                            Navigator.of(ctx).pop();
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              },
-              child: const Text('Generate Chart'),
-            ),
-            const SizedBox(height: 20),
-            // chart
-            _isLoading
-                ? const Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                : exerciseChartName.isNotEmpty
-                    ? Expanded(
-                        child: Center(
-                          child: chart!,
-                        ),
-                      )
-                    : const SizedBox(),
-          ],
+                    value: value,
+                  ),
+                  onSelected: (value) {
+                    _exerciseNameController.text = value.toString();
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              // button which will generate the chart if the exercise name is valid
+              ElevatedButton(
+                onPressed: () {
+                  if (_options.contains(_exerciseNameController.text)) {
+                    setState(() {
+                      _isLoading = true;
+                      exerciseChartName = _exerciseNameController.text;
+                    });
+                    _exerciseNameController.clear();
+                    // unfocus the text field
+                    FocusScope.of(context).unfocus();
+                    _fetchExerciseRecords(
+                      exerciseName: exerciseChartName,
+                    );
+                  } else {
+                    // show Dialog
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Exercise Not Found'),
+                        content:
+                            const Text('Please enter a valid exercise name'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('Okay'),
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+                child: const Text('Generate Chart'),
+              ),
+              const SizedBox(height: 20),
+              // chart
+              _isLoading
+                  ? const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : exerciseChartName.isNotEmpty
+                      ? Expanded(
+                          child: Center(
+                            child: chart!,
+                          ),
+                        )
+                      : const SizedBox(),
+            ],
+          ),
         ),
       ),
     );

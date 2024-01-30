@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:workout_app/gradient_background_color.dart';
 
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/edit_exercises_provider.dart';
@@ -56,6 +57,7 @@ class _ExercisesScreenState extends ConsumerState<EditableExercisesScreen> {
     }
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Exercises'),
         actions: [
@@ -71,9 +73,11 @@ class _ExercisesScreenState extends ConsumerState<EditableExercisesScreen> {
           ),
         ],
       ),
-      body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-          child: content),
+      body: Container(
+        decoration: gradientBackground(),
+        child: Padding(
+            padding: const EdgeInsets.fromLTRB(40, 60, 40, 20), child: content),
+      ),
     );
   }
 }

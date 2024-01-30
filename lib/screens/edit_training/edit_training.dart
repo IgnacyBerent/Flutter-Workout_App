@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/firestore/firestore.dart';
+import 'package:workout_app/gradient_background_color.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/training.dart';
 import 'package:workout_app/providers/edit_exercises_provider.dart';
@@ -143,7 +144,7 @@ class _EditTrainingScreenState extends ConsumerState<EditTrainingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Exercise> _addedExercises = ref.watch(editExercisesProvider);
+    final List<Exercise> addedExercises = ref.watch(editExercisesProvider);
 
     Widget content = const Center(
       child: Column(
@@ -156,16 +157,17 @@ class _EditTrainingScreenState extends ConsumerState<EditTrainingScreen> {
       ),
     );
 
-    if (_addedExercises.isNotEmpty) {
+    if (addedExercises.isNotEmpty) {
       content = ListView.builder(
-        itemCount: _addedExercises.length,
+        itemCount: addedExercises.length,
         itemBuilder: (context, index) {
-          return ExerciseCardOuter(_addedExercises[index]);
+          return ExerciseCardOuter(addedExercises[index]);
         },
       );
     }
 
     return Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: const Text('Your Training'),
           actions: [
@@ -175,84 +177,88 @@ class _EditTrainingScreenState extends ConsumerState<EditTrainingScreen> {
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: 80,
-                      child: DropdownButtonFormField(
-                        value: _selectedSplit,
-                        items: Split.values
-                            .map((split) => DropdownMenuItem(
-                                  value: split.toString().split('.')[1],
-                                  child: Text(split.toString().split('.')[1]),
-                                ))
-                            .toList(),
-                        decoration: const InputDecoration(
-                          labelText: 'Split Day',
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedSplit = value as String;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 30),
-                    Expanded(
-                      child: TextFormField(
-                        readOnly: true,
-                        controller: TextEditingController()
-                          ..text =
-                              _selectedDate, // show the selected date in the text field
-                        onTap: _presentDatePicker,
-                        decoration: const InputDecoration(
-                          labelText: 'Date',
+        body: Container(
+          decoration: gradientBackground(),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(40, 120, 40, 20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 80,
+                        child: DropdownButtonFormField(
+                          value: _selectedSplit,
+                          items: Split.values
+                              .map((split) => DropdownMenuItem(
+                                    value: split.toString().split('.')[1],
+                                    child: Text(split.toString().split('.')[1]),
+                                  ))
+                              .toList(),
+                          decoration: const InputDecoration(
+                            labelText: 'Split Day',
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedSplit = value as String;
+                            });
+                          },
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (ctx) => const EditableExercisesScreen(),
+                      const SizedBox(width: 30),
+                      Expanded(
+                        child: TextFormField(
+                          readOnly: true,
+                          controller: TextEditingController()
+                            ..text =
+                                _selectedDate, // show the selected date in the text field
+                          onTap: _presentDatePicker,
+                          decoration: const InputDecoration(
+                            labelText: 'Date',
+                          ),
                         ),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(16),
-                    splashColor: Theme.of(context).colorScheme.onSecondary,
-                    child: content,
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  height: 70,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => const EditableExercisesScreen(),
+                          ),
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(16),
+                      splashColor: Theme.of(context).colorScheme.onSecondary,
+                      child: content,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 70,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
                         ),
                       ),
+                      onPressed: _isLoading ? null : _editTraining,
+                      child: _isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text('Edit'),
                     ),
-                    onPressed: _isLoading ? null : _editTraining,
-                    child: _isLoading
-                        ? const CircularProgressIndicator()
-                        : const Text('Edit'),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ));
