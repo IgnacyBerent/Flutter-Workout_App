@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:workout_app/gradient_background_color.dart';
+import 'package:workout_app/animated_background_container.dart';
 
 import 'package:workout_app/screens/home.dart';
 import 'package:workout_app/screens/profile.dart';
@@ -13,6 +13,8 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
+  final GlobalKey<AnimatedBackgroundContainerState> animatedBackgroundKey =
+      GlobalKey();
   int _selectedPageIndex = 1;
 
   void selectPage(int index) => setState(() => _selectedPageIndex = index);
@@ -35,8 +37,8 @@ class _TabsScreenState extends State<TabsScreen> {
       appBar: AppBar(
         title: Text(activePageTitle),
       ),
-      body: Container(
-        decoration: gradientBackground(),
+      body: AnimatedBackgroundContainer(
+        key: animatedBackgroundKey,
         child: activePage,
       ),
       bottomNavigationBar: BottomNavigationBar(

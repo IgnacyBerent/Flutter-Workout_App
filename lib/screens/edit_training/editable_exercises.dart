@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workout_app/gradient_background_color.dart';
+import 'package:workout_app/animated_background_container.dart';
 
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/edit_exercises_provider.dart';
@@ -73,8 +73,7 @@ class _ExercisesScreenState extends ConsumerState<EditableExercisesScreen> {
           ),
         ],
       ),
-      body: Container(
-        decoration: gradientBackground(),
+      body: AnimatedBackgroundContainer(
         child: Padding(
             padding: const EdgeInsets.fromLTRB(40, 60, 40, 20), child: content),
       ),

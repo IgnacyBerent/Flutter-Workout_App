@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:workout_app/animated_background_container.dart';
 import 'package:workout_app/charts/exercise_progress_chart.dart';
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/firestore/firestore.dart';
-import 'package:workout_app/gradient_background_color.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/widgets/exercise_list_tile.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -73,8 +73,7 @@ class _ExerciseStatsScreenState extends State<ExerciseStatsScreen> {
       appBar: AppBar(
         title: const Text('Exercise Stats'),
       ),
-      body: Container(
-        decoration: gradientBackground(),
+      body: AnimatedBackgroundContainer(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 120, 0, 20),
           child: Column(

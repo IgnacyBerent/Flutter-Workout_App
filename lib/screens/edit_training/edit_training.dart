@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:workout_app/animated_background_container.dart';
 
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/firestore/firestore.dart';
-import 'package:workout_app/gradient_background_color.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/training.dart';
 import 'package:workout_app/providers/edit_exercises_provider.dart';
@@ -177,8 +177,7 @@ class _EditTrainingScreenState extends ConsumerState<EditTrainingScreen> {
             ),
           ],
         ),
-        body: Container(
-          decoration: gradientBackground(),
+        body: AnimatedBackgroundContainer(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(40, 120, 40, 20),
             child: Form(
