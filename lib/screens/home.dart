@@ -38,12 +38,19 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
             const Text('Version 1.2.1', style: TextStyle(fontSize: 12)),
-            const SizedBox(
+            SizedBox(
               height: 250,
-              // show my AppIcon.png
-              child: Image(
-                image: AssetImage(
-                  'assets/AppIconAlpha.png',
+              child: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.primary.withOpacity(
+                      0.7), // Zmień na kolor, który chcesz użyć jako maskę
+                  BlendMode
+                      .modulate, // Możesz zmienić tryb mieszania na inny, jeśli chcesz
+                ),
+                child: const Image(
+                  image: AssetImage(
+                    'assets/AppIconAlpha.png',
+                  ),
                 ),
               ),
             ),
