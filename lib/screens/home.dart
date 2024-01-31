@@ -42,10 +42,8 @@ class HomeScreen extends ConsumerWidget {
               height: 250,
               child: ColorFiltered(
                 colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.primary.withOpacity(
-                      0.7), // Zmień na kolor, który chcesz użyć jako maskę
-                  BlendMode
-                      .modulate, // Możesz zmienić tryb mieszania na inny, jeśli chcesz
+                  Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                  BlendMode.modulate,
                 ),
                 child: const Image(
                   image: AssetImage(
@@ -95,7 +93,7 @@ class HomeScreen extends ConsumerWidget {
                   child: const Text('Sign Out'),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

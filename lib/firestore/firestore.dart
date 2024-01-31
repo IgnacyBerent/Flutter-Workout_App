@@ -212,6 +212,7 @@ class FireStoreClass {
         weight: 0,
         reps: 0,
         bonusReps: 0,
+        bodyPart: '',
       );
     }
 
@@ -233,6 +234,7 @@ class FireStoreClass {
         weight: 0,
         reps: 0,
         bonusReps: 0,
+        bodyPart: '',
       );
     }
 
@@ -243,6 +245,7 @@ class FireStoreClass {
       weight: exerciseDoc['weight'],
       reps: exerciseDoc['reps'],
       bonusReps: exerciseDoc['bonusReps'],
+      bodyPart: exerciseDoc['bodyPart'],
     );
   }
 
@@ -297,33 +300,33 @@ class FireStoreClass {
 
   Future<void> addCustomExercisesNames({
     required String uid,
-    required List<String> exercisesNames,
+    required List<Map<String, String>> exercises,
   }) async {
-    // Get the current custom exercises names
-    final currentCustomExercisesNames = await getCustomExericsesNames(
+    // Get the current custom exercises
+    final currentCustomExercises = await getCustomExericsesNames(
       uid: uid,
     );
 
-    // Add the new exercises names to the current ones
-    currentCustomExercisesNames.addAll(exercisesNames);
+    // Add the new exercises to the current ones
+    currentCustomExercises.addAll(exercises);
 
     // Remove duplicates
-    final Set<String> customExercisesNamesSet =
-        currentCustomExercisesNames.toSet();
+    final Set<Map<String, String>> customExercisesSet =
+        currentCustomExercises.toSet();
 
-    // Update the custom exercises names
+    // Update the custom exercises
     await _myFireStore
         .collection('users')
         .doc(uid)
         .collection('customExercisesNames')
         .doc('customExercisesNames')
-        .set({'names': customExercisesNamesSet.toList()});
+        .set({'exercises': customExercisesSet.toList()});
   }
 
-  Future<List<String>> getCustomExericsesNames({
+  Future<List<Map<String, String>>> getCustomExericsesNames({
     required String uid,
   }) async {
-    // Get the current custom exercises names
+    // Get the current custom exercises
     final DocumentSnapshot doc = await _myFireStore
         .collection('users')
         .doc(uid)
@@ -335,31 +338,37 @@ class FireStoreClass {
       return [];
     }
 
-    final List<String> currentCustomExercisesNames =
-        List<String>.from(doc['names']);
+    final List<Map<String, String>> currentCustomExercises =
+        List<Map<String, String>>.from(doc['exercises']);
 
-    return currentCustomExercisesNames;
+    return currentCustomExercises;
   }
 
   Future<void> deleteCustomExerciseName({
     required String uid,
     required String exerciseName,
   }) async {
-    // Get the current custom exercises names
-    final currentCustomExercisesNames = await getCustomExericsesNames(
+    // Get the current custom exercises
+    final currentCustomExercises = await getCustomExericsesNames(
       uid: uid,
     );
 
-    // Remove the exercise name from the current ones
-    currentCustomExercisesNames.remove(exerciseName);
+    // Find the exercise to remove
+    final exerciseToRemove = currentCustomExercises.firstWhere(
+      (exercise) => exercise['name'] == exerciseName,
+      orElse: () => {},
+    );
 
-    // Update the custom exercises names
+    // Remove the exercise from the current ones
+    currentCustomExercises.remove(exerciseToRemove);
+
+    // Update the custom exercises
     await _myFireStore
         .collection('users')
         .doc(uid)
         .collection('customExercisesNames')
         .doc('customExercisesNames')
-        .set({'names': currentCustomExercisesNames});
+        .set({'exercises': currentCustomExercises});
   }
 
   Future<List<ExerciseProgress>> getExerciseRecords({

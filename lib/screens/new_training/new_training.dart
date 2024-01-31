@@ -126,16 +126,19 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
       training: newTraining,
     );
     // get all custom exercises names (those which arent in exerciseImageMap.keys)
-    final List<String> customExercisesNames = [];
+    final List<Map<String, String>> customExercises = [];
     for (Exercise exercise in ref.read(exercisesProvider)) {
       if (!exerciseImageMap.keys.contains(exercise.name)) {
-        customExercisesNames.add(exercise.name);
+        final Map<String, String> customExerciseMap = {
+          exercise.name: exercise.bodyPart
+        };
+        customExercises.add(customExerciseMap);
       }
     }
     // add custom exercises to the firebase
     await _db.addCustomExercisesNames(
       uid: user!.uid,
-      exercisesNames: customExercisesNames,
+      exercises: customExercises,
     );
 
     ref.read(exercisesProvider.notifier).clear();
@@ -173,118 +176,117 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
     }
 
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          title: const Text('New Training'),
-        ),
-        body: AnimatedBackgroundContainer(
-          key: animatedBackgroundKey,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(40, 120, 40, 20),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        width: 80,
-                        child: DropdownButtonFormField(
-                          value: _selectedSplit,
-                          items: Split.values
-                              .map((split) => DropdownMenuItem(
-                                    value: split.toString().split('.')[1],
-                                    child: Text(split.toString().split('.')[1]),
-                                  ))
-                              .toList(),
-                          decoration: const InputDecoration(
-                            labelText: 'Split Day',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedSplit = value as String;
-                              ref
-                                  .read(selectedDataProvider.notifier)
-                                  .changeSplit(_selectedSplit);
-                            });
-                          },
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text('New Training'),
+      ),
+      body: AnimatedBackgroundContainer(
+        key: animatedBackgroundKey,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(40, 120, 40, 20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 80,
+                      child: DropdownButtonFormField(
+                        value: _selectedSplit,
+                        items: Split.values
+                            .map((split) => DropdownMenuItem(
+                                  value: split.toString().split('.')[1],
+                                  child: Text(split.toString().split('.')[1]),
+                                ))
+                            .toList(),
+                        decoration: const InputDecoration(
+                          labelText: 'Split Day',
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedSplit = value as String;
+                            ref
+                                .read(selectedDataProvider.notifier)
+                                .changeSplit(_selectedSplit);
+                          });
+                        },
                       ),
-                      const SizedBox(width: 30),
-                      Expanded(
-                        child: TextFormField(
-                          readOnly: true,
-                          controller: TextEditingController()
-                            ..text =
-                                _selectedDate, // show the selected date in the text field
-                          onTap: _presentDatePicker,
-                          decoration: const InputDecoration(
-                            labelText: 'Date',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 70,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
-                          ),
-                        ),
-                      ),
-                      onPressed: _isLoadingLT || addedExercises.isNotEmpty
-                          ? null
-                          : _fetchLastTraining,
-                      child: _isLoadingLT
-                          ? const CircularProgressIndicator()
-                          : const Text('Copy last training'),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (ctx) => const ExercisesScreen(),
-                          ),
-                        );
-                      },
-                      borderRadius: BorderRadius.circular(16),
-                      splashColor: Theme.of(context).colorScheme.onSecondary,
-                      child: content,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 70,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
-                          ),
+                    const SizedBox(width: 30),
+                    Expanded(
+                      child: TextFormField(
+                        readOnly: true,
+                        controller: TextEditingController()
+                          ..text =
+                              _selectedDate, // show the selected date in the text field
+                        onTap: _presentDatePicker,
+                        decoration: const InputDecoration(
+                          labelText: 'Date',
                         ),
                       ),
-                      onPressed: _isLoading ? null : _saveTraining,
-                      child: _isLoading
-                          ? const CircularProgressIndicator()
-                          : const Text('Save'),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 70,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      ),
+                    ),
+                    onPressed: _isLoadingLT || addedExercises.isNotEmpty
+                        ? null
+                        : _fetchLastTraining,
+                    child: _isLoadingLT
+                        ? const CircularProgressIndicator()
+                        : const Text('Copy last training'),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => const ExercisesScreen(),
+                        ),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(16),
+                    splashColor: Theme.of(context).colorScheme.onSecondary,
+                    child: content,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 70,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      ),
+                    ),
+                    onPressed: _isLoading ? null : _saveTraining,
+                    child: _isLoading
+                        ? const CircularProgressIndicator()
+                        : const Text('Save'),
+                  ),
+                ),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -55,7 +55,9 @@ class _ExerciseStatsScreenState extends State<ExerciseStatsScreen> {
     super.initState();
     _db.getCustomExericsesNames(uid: user!.uid).then((customExercisesNames) {
       setState(() {
-        _options.addAll(customExercisesNames);
+        for (var exerciseMap in customExercisesNames) {
+          _options.addAll(exerciseMap.keys);
+        }
       });
     });
   }

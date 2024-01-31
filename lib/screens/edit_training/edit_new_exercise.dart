@@ -5,6 +5,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:workout_app/animated_background_container.dart';
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/firestore/firestore.dart';
+import 'package:workout_app/global_functions/ask_for_body_part.dart';
 
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/edit_exercises_provider.dart';
@@ -21,6 +22,7 @@ class EditNewExercise extends ConsumerStatefulWidget {
 
 class _EditNewExerciseState extends ConsumerState<EditNewExercise> {
   final _options = exerciseImageMap.keys.toList();
+  final _customExerciseNameBodyPartMap = <String, String>{};
 
   final _exerciseNameController = TextEditingController();
   bool _isLoading = false;
@@ -40,24 +42,47 @@ class _EditNewExerciseState extends ConsumerState<EditNewExercise> {
     super.initState();
     _db.getCustomExericsesNames(uid: user!.uid).then((customExercisesNames) {
       setState(() {
-        _options.addAll(customExercisesNames);
+        for (var exerciseMap in customExercisesNames) {
+          _options.addAll(exerciseMap.keys);
+          _customExerciseNameBodyPartMap.addAll(exerciseMap);
+        }
       });
     });
   }
 
-  void _addExercise() {
+  void _addExercise() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() {
         _isLoading = true;
       });
 
+      String? bodyPart;
+
+      if (!_options.contains(_selectedExerciseName)) {
+        bodyPart = await askForBodyPart(context);
+        while (bodyPart == null) {
+          // if user didn't select body part, stop adding exercise
+          return;
+        }
+      } else if (_customExerciseNameBodyPartMap
+          .containsKey(_selectedExerciseName)) {
+        bodyPart = _customExerciseNameBodyPartMap[_selectedExerciseName];
+      } else {
+        bodyPart = exerciseBodypartMap[_selectedExerciseName];
+      }
+
       final newExercise = Exercise(
         name: _selectedExerciseName,
         weight: _selectedWeight,
         reps: _selectedReps,
         bonusReps: _selectedBonusReps,
+        bodyPart: bodyPart!,
       );
+
+      if (!context.mounted) {
+        return;
+      }
 
       ref.read(editExercisesProvider.notifier).add(newExercise);
       Navigator.of(context).pop();
@@ -137,7 +162,7 @@ class _EditNewExerciseState extends ConsumerState<EditNewExercise> {
                       return 'Please enter weight';
                     }
                     if (double.tryParse(value) == null ||
-                        double.parse(value) <= 0) {
+                        double.parse(value) < 0) {
                       return 'Please enter valid weight';
                     }
                     return null;
