@@ -40,7 +40,8 @@ class _ExerciseStatsScreenState extends State<ExerciseStatsScreen> {
       LineSeries<ExerciseProgress, DateTime>(
         dataSource: exerciseRecords,
         xValueMapper: (record, _) => record.time,
-        yValueMapper: (record, _) => record.oneRepMax,
+        yValueMapper: (record, _) => record.oneRepMax.toInt(),
+        color: const Color.fromARGB(255, 182, 135, 5),
       ),
     ];
 

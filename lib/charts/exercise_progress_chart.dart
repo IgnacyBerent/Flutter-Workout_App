@@ -30,7 +30,7 @@ class ExerciseProgressChart extends StatelessWidget {
     return SfCartesianChart(
       primaryXAxis: DateTimeAxis(
         edgeLabelPlacement: EdgeLabelPlacement.shift,
-        dateFormat: DateFormat.yMd(),
+        dateFormat: DateFormat('dd/MM/yyyy'),
         title: AxisTitle(
           text: 'Date',
         ),
@@ -43,7 +43,11 @@ class ExerciseProgressChart extends StatelessWidget {
       ),
       title: ChartTitle(text: '$exerciseName Progress'),
       legend: Legend(isVisible: false),
-      tooltipBehavior: TooltipBehavior(enable: true),
+      tooltipBehavior: TooltipBehavior(
+        enable: true,
+        format: 'point.x \n point.y (kg)',
+        header: '',
+      ),
       series: seriesList,
     );
   }
