@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:workout_app/firebase_options.dart';
-import 'package:workout_app/widgets/widget_tree.dart';
+import 'package:workout_app/screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const WidgetTree(),
+      home: const SplashScreen(),
     );
   }
 }
