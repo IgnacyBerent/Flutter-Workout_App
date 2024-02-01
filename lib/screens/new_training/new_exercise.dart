@@ -11,6 +11,7 @@ import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/screens/new_training/button_functions.dart';
 import 'package:workout_app/widgets/exercise_list_tile.dart';
+import 'package:workout_app/widgets/sound_elevated_button.dart';
 
 class NewExercise extends ConsumerStatefulWidget {
   const NewExercise({
@@ -223,7 +224,7 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                 SizedBox(
                   height: 50,
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: SoundElevatedButton(
                     onPressed: () {
                       showPreviusResults(
                         context: context,
@@ -232,13 +233,6 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                         exerciseName: _exerciseNameController.text,
                       );
                     },
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
                     child: const Text('Previous Results'),
                   ),
                 ),
@@ -246,7 +240,7 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                 SizedBox(
                   height: 50,
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: SoundElevatedButton(
                     onPressed: () {
                       showOneRepMax(
                         context: context,
@@ -254,13 +248,6 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                         reps: int.parse(_selectedRepsController.text),
                       );
                     },
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
                     child: const Text('Calculate One-Rep Max'),
                   ),
                 ),
@@ -268,15 +255,8 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                 SizedBox(
                   height: 50,
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: SoundElevatedButton(
                     onPressed: () {},
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
                     child: const Text('Predict One-Rep Max'),
                   ),
                 ),
@@ -284,15 +264,8 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                 SizedBox(
                   height: 50,
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: SoundElevatedButton(
                     onPressed: () {},
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
                     child: const Text('Check Progress'),
                   ),
                 ),

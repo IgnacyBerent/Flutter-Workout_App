@@ -5,6 +5,7 @@ import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/providers/trainings_provider.dart';
+import 'package:workout_app/widgets/sound_elevated_button.dart';
 
 class HomeScreen extends ConsumerWidget {
   HomeScreen(this.selectPage, {super.key});
@@ -56,7 +57,7 @@ class HomeScreen extends ConsumerWidget {
             SizedBox(
               height: 70,
               width: 250,
-              child: ElevatedButton(
+              child: SoundElevatedButton(
                 onPressed: () => selectPage(0),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -71,7 +72,7 @@ class HomeScreen extends ConsumerWidget {
             SizedBox(
               height: 70,
               width: 250,
-              child: ElevatedButton(
+              child: SoundElevatedButton(
                 onPressed: () => selectPage(2),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,

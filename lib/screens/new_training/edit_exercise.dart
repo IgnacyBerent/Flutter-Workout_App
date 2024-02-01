@@ -11,6 +11,7 @@ import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/providers/new_exercises_provider.dart';
 import 'package:workout_app/screens/new_training/button_functions.dart';
 import 'package:workout_app/widgets/exercise_list_tile.dart';
+import 'package:workout_app/widgets/sound_elevated_button.dart';
 
 class EditExercise extends ConsumerStatefulWidget {
   const EditExercise({
@@ -261,7 +262,7 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                 SizedBox(
                   height: 50,
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: SoundElevatedButton(
                     onPressed: () {
                       showOneRepMax(
                         context: context,
@@ -269,13 +270,6 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                         reps: int.parse(_selectedRepsController.text),
                       );
                     },
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
                     child: const Text('Calculate One-Rep Max'),
                   ),
                 ),
@@ -283,15 +277,8 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                 SizedBox(
                   height: 50,
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: SoundElevatedButton(
                     onPressed: () {},
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
                     child: Text('Predict One-Rep Max'),
                   ),
                 ),
@@ -299,15 +286,8 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                 SizedBox(
                   height: 50,
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: SoundElevatedButton(
                     onPressed: () {},
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
                     child: Text('Check Progress'),
                   ),
                 ),

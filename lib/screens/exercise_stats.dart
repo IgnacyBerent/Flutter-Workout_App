@@ -8,6 +8,7 @@ import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/widgets/exercise_list_tile.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:workout_app/widgets/sound_elevated_button.dart';
 
 class ExerciseStatsScreen extends StatefulWidget {
   const ExerciseStatsScreen({super.key});
@@ -115,7 +116,7 @@ class _ExerciseStatsScreenState extends State<ExerciseStatsScreen> {
               ),
               const SizedBox(height: 20),
               // button which will generate the chart if the exercise name is valid
-              ElevatedButton(
+              SoundElevatedButton(
                 onPressed: () {
                   if (_options.contains(_exerciseNameController.text)) {
                     setState(() {

@@ -11,6 +11,7 @@ import 'package:workout_app/providers/trainings_provider.dart';
 import 'package:workout_app/firestore/firestore.dart';
 import 'package:workout_app/screens/exercise_stats.dart';
 import 'package:workout_app/widgets/record_table_row.dart';
+import 'package:workout_app/widgets/sound_elevated_button.dart';
 
 class ProfileScreen extends ConsumerWidget {
   ProfileScreen({Key? key}) : super(key: key);
@@ -113,7 +114,7 @@ class ProfileScreen extends ConsumerWidget {
                   SizedBox(
                     height: 70,
                     width: 250,
-                    child: ElevatedButton(
+                    child: SoundElevatedButton(
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
