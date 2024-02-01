@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:workout_app/charts/exercise_progress_chart.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/exercise_record.dart';
+import 'package:workout_app/models/piechartsampledata.dart';
 import 'package:workout_app/models/training.dart';
 
 class FireStoreClass {
@@ -408,5 +409,39 @@ class FireStoreClass {
     // Wait for all futures to complete
     await Future.wait(futures);
     return exerciseRecords;
+  }
+
+  Future<List<ChartSampleData>> getExerciseBodyPartData(String uid) async {
+    List<ChartSampleData> data = [];
+
+    var i = 0;
+    for (BodyParts part in BodyParts.values) {
+      final QuerySnapshot trainingsSnapshot = await _myFireStore
+          .collection('users')
+          .doc(uid)
+          .collection('trainings')
+          .get();
+
+      int count = 0;
+      for (var training in trainingsSnapshot.docs) {
+        final QuerySnapshot exercisesSnapshot = await _myFireStore
+            .collection('users')
+            .doc(uid)
+            .collection('trainings')
+            .doc(training.id)
+            .collection('exercises')
+            .where('bodyPart', isEqualTo: part.name.toString())
+            .get();
+        count += exercisesSnapshot.docs.length;
+      }
+
+      data.add(ChartSampleData(
+        index: i++,
+        x: part.toString().split('.').last,
+        y: count.toDouble(),
+      ));
+    }
+
+    return data;
   }
 }
