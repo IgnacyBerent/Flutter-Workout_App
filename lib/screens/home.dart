@@ -1,8 +1,8 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/providers/trainings_provider.dart';
@@ -28,18 +28,21 @@ class HomeScreen extends ConsumerWidget {
       child: Center(
         child: Column(
           children: [
-            GradientText(
-              'Welcome to HIT app!',
-              style: const TextStyle(
+            ColorizeAnimatedTextKit(
+              text: const ['Welcome to HIT!'],
+              textStyle: const TextStyle(
                 fontSize: 20.0,
+                fontWeight: FontWeight.bold,
               ),
               colors: [
                 Theme.of(context).colorScheme.onPrimaryContainer,
                 Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.secondary
+                Theme.of(context).colorScheme.secondary,
               ],
+              speed: const Duration(seconds: 1),
+              repeatForever: true,
             ),
-            const Text('Version 1.2.1', style: TextStyle(fontSize: 12)),
+            const Text('Version 1.0.0', style: TextStyle(fontSize: 12)),
             InkWell(
               onTap: () {
                 final player = AudioPlayer();
