@@ -18,10 +18,14 @@ class _SplashScreenState extends State<SplashScreen>
   late SequenceAnimation _sequenceAnimation;
 
   _playSoundMultipleTimes() async {
-    for (int i = 0; i < 3; i++) {
-      await Future.delayed(Duration(milliseconds: 500 * i), () async {
+    for (int i = 0; i < 4; i++) {
+      await Future.delayed(Duration(milliseconds: 400 * i), () async {
         AudioPlayer player = AudioPlayer();
-        await player.setAsset('assets/falling_pipe_line.mp3');
+        if (i == 0) {
+          await player.setAsset('assets/sounds/yeah_buddy.mp3');
+        } else {
+          await player.setAsset('assets/sounds/falling_pipe_line.mp3');
+        }
         player.play();
       });
     }

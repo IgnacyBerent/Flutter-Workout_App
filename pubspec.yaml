@@ -84,7 +84,7 @@ flutter:
       - assets/exercise_icons/
       - assets/AppIcon.png
       - assets/AppIconAlpha.png
-      - assets/falling_pipe_line.mp3
+      - assets/sounds/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

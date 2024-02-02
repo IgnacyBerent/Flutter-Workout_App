@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 void playSound() {
   final player = AudioPlayer();
-  player.play(AssetSource('falling_pipe_line.mp3'));
+  player.play(AssetSource('sounds/falling_pipe_line.mp3'));
 }
 
 class SoundElevatedButton extends ElevatedButton {

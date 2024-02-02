@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,16 +40,22 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
             const Text('Version 1.2.1', style: TextStyle(fontSize: 12)),
-            SizedBox(
-              height: 250,
-              child: ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.primary.withOpacity(0.7),
-                  BlendMode.modulate,
-                ),
-                child: const Image(
-                  image: AssetImage(
-                    'assets/AppIconAlpha.png',
+            InkWell(
+              onTap: () {
+                final player = AudioPlayer();
+                player.play(AssetSource('sounds/falling_pipe_line.mp3'));
+              },
+              child: SizedBox(
+                height: 250,
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                    BlendMode.modulate,
+                  ),
+                  child: const Image(
+                    image: AssetImage(
+                      'assets/AppIconAlpha.png',
+                    ),
                   ),
                 ),
               ),
