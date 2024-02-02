@@ -45,6 +45,10 @@ class GradientPieChart extends StatelessWidget {
                 fontSize: 14,
               ),
             ),
+            // Add these lines
+            strokeColor:
+                Theme.of(context).colorScheme.secondary.withOpacity(0.35),
+            strokeWidth: 0.1,
           ),
         ],
       ),
