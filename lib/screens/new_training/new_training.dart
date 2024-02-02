@@ -130,16 +130,18 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
     for (Exercise exercise in ref.read(exercisesProvider)) {
       if (!exerciseImageMap.keys.contains(exercise.name)) {
         final Map<String, String> customExerciseMap = {
-          exercise.name: exercise.bodyPart
+          exercise.name: exercise.bodyPart.toString()
         };
         customExercises.add(customExerciseMap);
       }
     }
     // add custom exercises to the firebase
-    await _db.addCustomExercisesNames(
-      uid: user!.uid,
-      exercises: customExercises,
-    );
+    if (customExercises.isNotEmpty) {
+      await _db.addCustomExercisesNames(
+        uid: user!.uid,
+        exercises: customExercises,
+      );
+    }
 
     ref.read(exercisesProvider.notifier).clear();
     ref.read(trainingsProvider.notifier).add(newTraining);

@@ -61,19 +61,15 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
         _isLoading = true;
       });
 
-      String? bodyPart;
+      String bodyPart = '';
 
       if (!_options.contains(_selectedExerciseName)) {
         bodyPart = await askForBodyPart(context);
-        while (bodyPart == null) {
-          // if user didn't select body part, stop adding exercise
-          return;
-        }
       } else if (_customExerciseNameBodyPartMap
           .containsKey(_selectedExerciseName)) {
-        bodyPart = _customExerciseNameBodyPartMap[_selectedExerciseName];
+        bodyPart = _customExerciseNameBodyPartMap[_selectedExerciseName]!;
       } else {
-        bodyPart = exerciseBodypartMap[_selectedExerciseName];
+        bodyPart = exerciseBodypartMap[_selectedExerciseName]!;
       }
 
       final newExercise = Exercise(
@@ -81,7 +77,7 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
         weight: _selectedWeight,
         reps: _selectedReps,
         bonusReps: _selectedBonusReps,
-        bodyPart: bodyPart!,
+        bodyPart: bodyPart,
       );
 
       if (!context.mounted) return;

@@ -340,7 +340,9 @@ class FireStoreClass {
     }
 
     final List<Map<String, String>> currentCustomExercises =
-        List<Map<String, String>>.from(doc['exercises']);
+        (doc['exercises'] as List)
+            .map((item) => Map<String, String>.from(item))
+            .toList();
 
     return currentCustomExercises;
   }
