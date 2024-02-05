@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:workout_app/models/exercise.dart';
 
 enum Split {
@@ -12,7 +13,7 @@ enum Split {
 }
 
 class Training {
-  final String date;
+  final DateTime date;
   final String split;
   final List<Exercise> exercises;
 
@@ -24,7 +25,7 @@ class Training {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'date': date,
+      'date': date.toIso8601String(),
       'split': split.toString(),
       'exercises': exercises,
     };
@@ -32,7 +33,7 @@ class Training {
 
   factory Training.fromMap(Map<String, dynamic> map) {
     return Training(
-      date: map['date'] as String,
+      date: DateTime.parse(map['date'] as String),
       split: map['split'] as String,
       exercises: List<Exercise>.from(
         (map['exercises'] as List<int>).map<Exercise>(
@@ -44,9 +45,13 @@ class Training {
 
   static Training fromSnapshot(DocumentSnapshot<Object?> doc) {
     return Training(
-      date: doc['date'] as String,
+      date: DateTime.parse(doc['date'] as String),
       split: doc['split'] as String,
       exercises: [],
     );
+  }
+
+  String get formattedDate {
+    return DateFormat('dd-MM-yyyy').format(date);
   }
 }

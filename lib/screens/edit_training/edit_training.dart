@@ -110,7 +110,7 @@ class _EditTrainingScreenState extends ConsumerState<EditTrainingScreen> {
       _isLoading = true;
     });
     final newTraining = Training(
-      date: _selectedDate,
+      date: DateFormat('dd-MM-yyyy').parse(_selectedDate),
       split: _selectedSplit,
       exercises: ref.watch(editExercisesProvider),
     );

@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import 'package:workout_app/firestore/auth.dart';
 import 'package:workout_app/firestore/firestore.dart';
@@ -54,13 +53,6 @@ class _TrainingsScreenState extends ConsumerState<TrainingsScreen> {
         .toList()
         .cast<Training>();
 
-    // Convert the date strings to DateTime objects and sort the trainings by date in descending order
-    loadedTrainings.sort((a, b) {
-      final aDate = DateFormat('dd-MM-yyyy').parse(a.date);
-      final bDate = DateFormat('dd-MM-yyyy').parse(b.date);
-      return bDate.compareTo(aDate);
-    });
-
     ref.read(trainingsProvider.notifier).load(loadedTrainings);
 
     if (querySnapshot.docs.isNotEmpty) {
@@ -87,7 +79,8 @@ class _TrainingsScreenState extends ConsumerState<TrainingsScreen> {
             } else {
               // Replace DocumentSnapshot with Training
               final Training training = trainings[index - 1];
-              return TrainingCard(split: training.split, date: training.date);
+              return TrainingCard(
+                  split: training.split, date: training.formattedDate);
             }
           },
         ),

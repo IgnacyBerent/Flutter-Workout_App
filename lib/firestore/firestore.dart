@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:workout_app/charts/exercise_progress_chart.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/exercise_record.dart';
@@ -33,7 +34,7 @@ class FireStoreClass {
         .collection('users')
         .doc(uid)
         .collection('trainings')
-        .doc(training.date) // use the training date as the document ID
+        .doc(training.date.toIso8601String())
         .set(newTraining);
 
     // Add each exercise as a new document in the 'exercises' subcollection
@@ -42,9 +43,9 @@ class FireStoreClass {
           .collection('users')
           .doc(uid)
           .collection('trainings')
-          .doc(training.date)
+          .doc(training.date.toIso8601String())
           .collection('exercises')
-          .doc(exercise.id) // generate a new document ID for each exercise
+          .doc(exercise.id)
           .set(exercise.toMap());
     }
   }
@@ -59,9 +60,8 @@ class FireStoreClass {
         .collection('users')
         .doc(uid)
         .collection('trainings')
-        .orderBy('date',
-            descending: true) // Sort by the 'date' field in descending order
-        .limit(10); // Limit to 10 documents at a time
+        .orderBy('date', descending: true)
+        .limit(10);
 
     if (lastDocument != null) {
       query = query.startAfterDocument(lastDocument);
@@ -76,12 +76,15 @@ class FireStoreClass {
     required String uid,
     required String date,
   }) async {
+    // Convert date to DateTime object
+    final dateObject = DateFormat('dd-MM-yyyy').parse(date);
+
     // Get reference to the subcollection
     CollectionReference exercises = _myFireStore
         .collection('users')
         .doc(uid)
         .collection('trainings')
-        .doc(date)
+        .doc(dateObject.toIso8601String())
         .collection('exercises');
 
     // Delete all documents in the subcollection
@@ -95,7 +98,7 @@ class FireStoreClass {
         .collection('users')
         .doc(uid)
         .collection('trainings')
-        .doc(date)
+        .doc(dateObject.toIso8601String())
         .delete();
   }
 
@@ -105,6 +108,11 @@ class FireStoreClass {
     required String newDate,
     required Training training,
   }) async {
+    // Convert date to DateTime object
+    final parts2 = newDate.split('-');
+    final newDateObject = DateTime(
+        int.parse(parts2[2]), int.parse(parts2[1]), int.parse(parts2[0]));
+
     // Delete the old training
     await deleteTraining(uid: uid, date: date);
 
@@ -118,7 +126,8 @@ class FireStoreClass {
         .collection('users')
         .doc(uid)
         .collection('trainings')
-        .doc(newDate) // use the training date as the document ID
+        .doc(newDateObject
+            .toIso8601String()) // use the training date as the document ID
         .set(newTraining);
 
     // Add each exercise as a new document in the 'exercises' subcollection
@@ -127,9 +136,9 @@ class FireStoreClass {
           .collection('users')
           .doc(uid)
           .collection('trainings')
-          .doc(newDate)
+          .doc(newDateObject.toIso8601String())
           .collection('exercises')
-          .doc(exercise.id) // generate a new document ID for each exercise
+          .doc(exercise.id)
           .set(exercise.toMap());
     }
   }
@@ -138,11 +147,16 @@ class FireStoreClass {
     required String uid,
     required String date,
   }) async {
+    // Convert date to DateTime object
+    final parts = date.split('-');
+    final dateObject =
+        DateTime(int.parse(parts[2]), int.parse(parts[1]), int.parse(parts[0]));
+
     final QuerySnapshot querySnapshot = await _myFireStore
         .collection('users')
         .doc(uid)
         .collection('trainings')
-        .doc(date)
+        .doc(dateObject.toIso8601String())
         .collection('exercises')
         .get();
 
@@ -154,18 +168,22 @@ class FireStoreClass {
     return exercises;
   }
 
-  // searches for training with the same split and date closest to the given
   Future<List<Exercise>> getLastTraining({
     required String uid,
     required String split,
     required String date,
   }) async {
+    // Convert date to DateTime object
+    final parts = date.split('-');
+    final dateObject =
+        DateTime(int.parse(parts[2]), int.parse(parts[1]), int.parse(parts[0]));
+
     final QuerySnapshot querySnapshot = await _myFireStore
         .collection('users')
         .doc(uid)
         .collection('trainings')
         .where('split', isEqualTo: split)
-        .where('date', isLessThan: date)
+        .where('date', isLessThan: dateObject.toIso8601String())
         .orderBy('date', descending: true)
         .limit(1)
         .get();
@@ -189,19 +207,23 @@ class FireStoreClass {
     return exercises;
   }
 
-  // search for exercise results from the last training with the same name
   Future<Exercise> getLastExerciseResults({
     required String uid,
     required String name,
     required String date,
     required String split,
   }) async {
+    // Convert date to DateTime object
+    final parts = date.split('-');
+    final dateObject =
+        DateTime(int.parse(parts[2]), int.parse(parts[1]), int.parse(parts[0]));
+
     final QuerySnapshot querySnapshot = await _myFireStore
         .collection('users')
         .doc(uid)
         .collection('trainings')
         .where('split', isEqualTo: split)
-        .where('date', isLessThan: date)
+        .where('date', isLessThan: dateObject.toIso8601String())
         .orderBy('date', descending: true)
         .limit(1)
         .get();
@@ -276,19 +298,13 @@ class FireStoreClass {
         maxOneRepMax = exerciseRecord.oneRepMax;
         maxOneRepMaxDate = exerciseRecord.time;
       }
-    }
-
-    String formatedMaxOneRepMaxDate =
-        maxOneRepMaxDate.toString().substring(0, 10);
-    final parts = formatedMaxOneRepMaxDate.split('-');
-    formatedMaxOneRepMaxDate = '${parts[2]}-${parts[1]}-${parts[0]}';
-
-    // fetch the exercise reps and weight for the date when one rep max was the highest
+    } // fetch the exercise reps and weight for the date when one rep max was the highest
     final QuerySnapshot querySnapshot = await _myFireStore
         .collection('users')
         .doc(uid)
         .collection('trainings')
-        .doc(formatedMaxOneRepMaxDate)
+        .doc(maxOneRepMaxDate!
+            .toIso8601String()) // Removed the null check here because we're already checking it above
         .collection('exercises')
         .where('name', isEqualTo: exerciseName)
         .get();
@@ -401,9 +417,7 @@ class FireStoreClass {
         final weight = exercise['weight'];
         final reps = exercise['reps'];
         final oneRepMax = weight * (1 + (reps / 30));
-        final parts = training.id.split('-');
-        final reformattedDate = '${parts[2]}-${parts[1]}-${parts[0]}';
-        final trainingDate = DateTime.parse(reformattedDate);
+        final trainingDate = DateTime.parse(training.id);
         exerciseRecords.add(ExerciseProgress(trainingDate, oneRepMax));
       }
     });

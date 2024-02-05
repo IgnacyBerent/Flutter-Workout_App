@@ -116,8 +116,9 @@ class _NewTrainingScreenState extends ConsumerState<NewTrainingScreen> {
     setState(() {
       _isLoading = true;
     });
+
     final newTraining = Training(
-      date: _selectedDate,
+      date: DateFormat('dd-MM-yyyy').parse(_selectedDate),
       split: _selectedSplit,
       exercises: ref.read(exercisesProvider),
     );
