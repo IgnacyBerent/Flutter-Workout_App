@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:workout_app/charts/exercise_progress_chart.dart';
 import 'package:workout_app/models/exercise.dart';
@@ -328,8 +329,13 @@ class FireStoreClass {
     currentCustomExercises.addAll(exercises);
 
     // Remove duplicates
-    final Set<Map<String, String>> customExercisesSet =
-        currentCustomExercises.toSet();
+    final uniqueCustomExercises = currentCustomExercises
+        .fold<List<Map<String, String>>>([], (previous, element) {
+      if (!previous.any((map) => mapEquals(map, element))) {
+        previous.add(element);
+      }
+      return previous;
+    });
 
     // Update the custom exercises
     await _myFireStore
@@ -337,7 +343,7 @@ class FireStoreClass {
         .doc(uid)
         .collection('customExercisesNames')
         .doc('customExercisesNames')
-        .set({'exercises': customExercisesSet.toList()});
+        .set({'exercises': uniqueCustomExercises});
   }
 
   Future<List<Map<String, String>>> getCustomExericsesNames({
