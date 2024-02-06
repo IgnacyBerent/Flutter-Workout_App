@@ -13,7 +13,7 @@ class ExerciseCardOuter extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        height: 140,
+        height: 150,
         child: ExerciseCard(exercise),
       ),
     );

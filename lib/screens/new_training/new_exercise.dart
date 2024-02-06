@@ -141,6 +141,9 @@ class _NewExerciseState extends ConsumerState<NewExercise> {
                   itemBuilder: (context, value) => ExerciseListTile(
                     context: context,
                     value: value,
+                    bodypart: _customExerciseNameBodyPartMap.containsKey(value)
+                        ? _customExerciseNameBodyPartMap[value]!
+                        : exerciseBodypartMap[value]!,
                   ),
                   onSelected: (value) {
                     _exerciseNameController.text = value.toString();

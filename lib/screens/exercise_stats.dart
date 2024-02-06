@@ -108,6 +108,7 @@ class _ExerciseStatsScreenState extends State<ExerciseStatsScreen> {
                   itemBuilder: (context, value) => ExerciseListTile(
                     context: context,
                     value: value,
+                    bodypart: '',
                   ),
                   onSelected: (value) {
                     _exerciseNameController.text = value.toString();

@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:workout_app/models/exercise.dart';
 
 class ExerciseListTile extends StatelessWidget {
-  const ExerciseListTile({
-    super.key,
-    required this.context,
-    required this.value,
-  });
+  const ExerciseListTile(
+      {super.key,
+      required this.context,
+      required this.value,
+      required this.bodypart});
 
   final BuildContext context;
   final String value;
+  final String bodypart;
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +24,25 @@ class ExerciseListTile extends StatelessWidget {
                   'assets/exercise_icons/${exerciseImageMap[value]}',
                   width: 30,
                   height: 30,
+                  color: Theme.of(context).colorScheme.primary,
                 )
-              : const Icon(
+              : Icon(
                   Icons.fitness_center,
                   size: 30,
-                  color: Colors.black,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
           const SizedBox(width: 10),
-          Expanded(child: Text(value)),
+          Expanded(
+            child: Wrap(
+              spacing: 10, // space between the texts
+              children: [
+                Text(value),
+                Text(bodypart,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary)),
+              ],
+            ),
+          ),
         ],
       ),
     );

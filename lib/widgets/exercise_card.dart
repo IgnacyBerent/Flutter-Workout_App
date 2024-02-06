@@ -11,12 +11,16 @@ class ExerciseCard extends StatelessWidget {
     return Card(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            exercise.name,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontSize: 16,
+          Center(
+            child: Text(
+              exercise.name,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontSize: 16,
+              ),
             ),
           ),
           Text(
