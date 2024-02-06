@@ -24,7 +24,7 @@ class _ExerciseStatsScreenState extends State<ExerciseStatsScreen> {
   var exerciseChartName = '';
   final User? user = Auth().currentUser;
   final FireStoreClass _db = FireStoreClass();
-  ExerciseProgressChart? chart;
+  Widget? chart;
 
   Future<void> _fetchExerciseRecords({
     required String exerciseName,
@@ -34,22 +34,42 @@ class _ExerciseStatsScreenState extends State<ExerciseStatsScreen> {
       exerciseName: exerciseName,
     );
 
-    // sort the records by date
-    exerciseRecords.sort((a, b) => a.time.compareTo(b.time));
+    if (exerciseRecords.isEmpty) {
+      setState(() {
+        chart = Wrap(
+          alignment: WrapAlignment.center,
+          children: [
+            const Text(
+              'No records found for:',
+            ),
+            Text(
+              exerciseName,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        );
+        _isLoading = false;
+      });
+    } else {
+      // sort the records by date
+      exerciseRecords.sort((a, b) => a.time.compareTo(b.time));
 
-    final seriesList = [
-      LineSeries<ExerciseProgress, DateTime>(
-        dataSource: exerciseRecords,
-        xValueMapper: (record, _) => record.time,
-        yValueMapper: (record, _) => record.oneRepMax.toInt(),
-        color: const Color.fromARGB(255, 182, 135, 5),
-      ),
-    ];
+      final seriesList = [
+        LineSeries<ExerciseProgress, DateTime>(
+          dataSource: exerciseRecords,
+          xValueMapper: (record, _) => record.time,
+          yValueMapper: (record, _) => record.oneRepMax.toInt(),
+          color: const Color.fromARGB(255, 182, 135, 5),
+        ),
+      ];
 
-    setState(() {
-      chart = ExerciseProgressChart(seriesList, exerciseName);
-      _isLoading = false;
-    });
+      setState(() {
+        chart = ExerciseProgressChart(seriesList, exerciseName);
+        _isLoading = false;
+      });
+    }
   }
 
   @override
