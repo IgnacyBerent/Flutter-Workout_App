@@ -435,27 +435,31 @@ class FireStoreClass {
 
   Future<List<ChartSampleData>> getExerciseBodyPartData(String uid) async {
     List<ChartSampleData> data = [];
-
     var i = 0;
-    for (BodyParts part in BodyParts.values) {
-      final QuerySnapshot trainingsSnapshot = await _myFireStore
-          .collection('users')
-          .doc(uid)
-          .collection('trainings')
-          .get();
 
-      int count = 0;
+    final QuerySnapshot trainingsSnapshot = await _myFireStore
+        .collection('users')
+        .doc(uid)
+        .collection('trainings')
+        .get();
+
+    for (BodyParts part in BodyParts.values) {
+      List<Future<QuerySnapshot>> futures = [];
+
       for (var training in trainingsSnapshot.docs) {
-        final QuerySnapshot exercisesSnapshot = await _myFireStore
+        futures.add(_myFireStore
             .collection('users')
             .doc(uid)
             .collection('trainings')
             .doc(training.id)
             .collection('exercises')
             .where('bodyPart', isEqualTo: part.name.toString())
-            .get();
-        count += exercisesSnapshot.docs.length;
+            .get());
       }
+
+      final results = await Future.wait(futures);
+
+      int count = results.fold(0, (prev, curr) => prev + curr.docs.length);
 
       data.add(ChartSampleData(
         index: i++,
