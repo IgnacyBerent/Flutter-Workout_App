@@ -247,13 +247,6 @@ class _EditExerciseState extends ConsumerState<EditExercise> {
                         exerciseName: _exerciseNameController.text,
                       );
                     },
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
-                    ),
                     child: const Text('Previous Results'),
                   ),
                 ),

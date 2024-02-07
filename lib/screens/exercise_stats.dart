@@ -36,8 +36,8 @@ class _ExerciseStatsScreenState extends State<ExerciseStatsScreen> {
 
     if (exerciseRecords.isEmpty) {
       setState(() {
-        chart = Wrap(
-          alignment: WrapAlignment.center,
+        chart = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
               'No records found for:',

@@ -36,6 +36,7 @@ class ExerciseProgressChart extends StatelessWidget {
         ),
       ),
       primaryYAxis: NumericAxis(
+        numberFormat: NumberFormat.compact(), // Add this line
         minimum: getMinValue(),
         title: AxisTitle(
           text: 'One Rep Max (kg)',
